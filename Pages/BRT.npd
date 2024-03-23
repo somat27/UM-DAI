@@ -1,0 +1,1 @@
+{"Pages":[{"Name":"loginPage","Type":"Normal","Controls":[{"Name":"registerButton","Type":"Button"}],"Bindings":[{"Name":"username","Type":null}]}],"Languages":{"Languages":[],"TemplateKeys":null},"AppVersion":"0.9.33.0","Themes":null,"Styles":null}
