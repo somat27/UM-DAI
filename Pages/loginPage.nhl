@@ -31,7 +31,7 @@
                 <av:RotateTransform Angle="0" />
               </av:TextBlock.RenderTransform>
             </av:TextBlock>
-            <av:TextBlock Text="Login to your existing account" FontFamily="Futura" Foreground="#FF000000" FontWeight="Normal" FontSize="18" Height="Auto" HorizontalAlignment="Center" Effect="{x:Null}">
+            <av:TextBlock Text="Login to your existing account" FontFamily="Futura" FontWeight="Normal" FontSize="18" Foreground="#FF000000" Height="Auto" HorizontalAlignment="Center" Effect="{x:Null}">
               <av:TextBlock.RenderTransform>
                 <av:RotateTransform Angle="0" />
               </av:TextBlock.RenderTransform>
