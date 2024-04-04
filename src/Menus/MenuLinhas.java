@@ -2,19 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 package Menus;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
-import java.awt.geom.RoundRectangle2D;
-import javax.swing.BorderFactory;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-
+import java.sql.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -27,6 +19,17 @@ public class MenuLinhas extends javax.swing.JFrame {
      */
     public MenuLinhas() {
         initComponents();
+        CorLinha.removeAllItems();
+        CorLinha.addItem("Amarela");
+        CorLinha.addItem("Azul");
+        CorLinha.addItem("Verde");
+        CorLinha.addItem("Vermelha");
+        CorLinha.setSelectedItem(null);
+        Sentido.removeAllItems();
+        Sentido.setSelectedItem(null);
+        TipoDia.removeAllItems();
+        TipoDia.setSelectedItem(null);
+        BotaoConfirmarLinhas.setEnabled(false);
     }
 
     /**
@@ -38,15 +41,21 @@ public class MenuLinhas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Fundo = new javax.swing.JPanel();
-        Topo = new java.awt.Panel();
-        TUB_logo = new javax.swing.JLabel();
-        TipoDia = new javax.swing.JComboBox<>();
-        CorLinha = new javax.swing.JComboBox<>();
-        Sentido = new javax.swing.JComboBox<>();
+        javax.swing.JPanel Fundo = new javax.swing.JPanel();
+        java.awt.Panel Topo = new java.awt.Panel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        javax.swing.JLabel TUB_logo = new javax.swing.JLabel();
+        TipoDia = new javax.swing.JComboBox<>();
+        CorLinha = new javax.swing.JComboBox<>();
+        Sentido = new javax.swing.JComboBox<>();
+        javax.swing.JLabel TextoSentido = new javax.swing.JLabel();
+        javax.swing.JLabel TextoTipoDia = new javax.swing.JLabel();
+        javax.swing.JLabel TextoCorLinha = new javax.swing.JLabel();
+        BotaoConfirmarLinhas = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TabelaHorario = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 71, 103));
@@ -62,33 +71,78 @@ public class MenuLinhas extends javax.swing.JFrame {
         Topo.setBackground(new java.awt.Color(3, 125, 190));
         Topo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/seta-esquerda.png"))); // NOI18N
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel1.setMaximumSize(new java.awt.Dimension(70, 70));
+        jLabel1.setMinimumSize(new java.awt.Dimension(70, 70));
+        jLabel1.setPreferredSize(new java.awt.Dimension(70, 70));
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/notificacao.png"))); // NOI18N
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/do-utilizador.png"))); // NOI18N
+
         TUB_logo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TUB_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/TUB.png"))); // NOI18N
+        TUB_logo.setFocusable(false);
+        TUB_logo.setMaximumSize(new java.awt.Dimension(440, 50));
+        TUB_logo.setMinimumSize(new java.awt.Dimension(440, 50));
+        TUB_logo.setPreferredSize(new java.awt.Dimension(440, 50));
+        TUB_logo.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout TopoLayout = new javax.swing.GroupLayout(Topo);
         Topo.setLayout(TopoLayout);
         TopoLayout.setHorizontalGroup(
             TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(TUB_logo, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopoLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TopoLayout.createSequentialGroup()
+                    .addGap(93, 93, 93)
+                    .addComponent(TUB_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(93, Short.MAX_VALUE)))
         );
         TopoLayout.setVerticalGroup(
             TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TopoLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(TUB_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(TopoLayout.createSequentialGroup()
+                    .addGap(5, 5, 5)
+                    .addComponent(TUB_logo, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addGap(5, 5, 5)))
         );
 
-        TipoDia.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        TipoDia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        TipoDia.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        TipoDia.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                TipoDiaItemStateChanged(evt);
+            }
+        });
         TipoDia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TipoDiaActionPerformed(evt);
             }
         });
 
-        CorLinha.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        CorLinha.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Linha Vermelha" }));
+        CorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         CorLinha.setToolTipText("");
+        CorLinha.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         CorLinha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,56 +150,97 @@ public class MenuLinhas extends javax.swing.JFrame {
             }
         });
 
-        Sentido.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        Sentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        Sentido.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         Sentido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SentidoActionPerformed(evt);
             }
         });
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Sentido");
+        TextoSentido.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoSentido.setForeground(new java.awt.Color(255, 255, 255));
+        TextoSentido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoSentido.setText("Sentido");
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Tipo de Dia");
+        TextoTipoDia.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoTipoDia.setForeground(new java.awt.Color(255, 255, 255));
+        TextoTipoDia.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoTipoDia.setText("Tipo de dia");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Cor da Linha");
+        TextoCorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoCorLinha.setForeground(new java.awt.Color(255, 255, 255));
+        TextoCorLinha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoCorLinha.setText("Cor da Linha");
+
+        BotaoConfirmarLinhas.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        BotaoConfirmarLinhas.setText("Procurar Horarios");
+        BotaoConfirmarLinhas.setToolTipText("");
+        BotaoConfirmarLinhas.setActionCommand("Procurar Horarios");
+        BotaoConfirmarLinhas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BotaoConfirmarLinhas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoConfirmarLinhasActionPerformed(evt);
+            }
+        });
+
+        TabelaHorario.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
+        TabelaHorario.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Horario", "Paragem"
+            }
+        ));
+        TabelaHorario.setToolTipText("");
+        jScrollPane2.setViewportView(TabelaHorario);
 
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
         Fundo.setLayout(FundoLayout);
         FundoLayout.setHorizontalGroup(
             FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(Topo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(FundoLayout.createSequentialGroup()
+                .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(FundoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(TextoCorLinha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(CorLinha, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TextoSentido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Sentido, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TextoTipoDia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TipoDia, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Sentido, 0, 400, Short.MAX_VALUE)
-                    .addComponent(TipoDia, 0, 400, Short.MAX_VALUE)
-                    .addComponent(CorLinha, 0, 400, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+                .addGap(0, 56, Short.MAX_VALUE)
+                .addComponent(BotaoConfirmarLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
         );
         FundoLayout.setVerticalGroup(
             FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FundoLayout.createSequentialGroup()
                 .addComponent(Topo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TextoCorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(CorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(CorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(TextoSentido, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Sentido, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Sentido, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(TextoTipoDia, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TipoDia, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(468, Short.MAX_VALUE))
+                .addComponent(TipoDia, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addComponent(BotaoConfirmarLinhas, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -164,16 +259,94 @@ public class MenuLinhas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
-        // TODO add your handling code here:
+        try{
+            if(CorLinha.getSelectedItem().equals("Amarela")) {
+                Sentido.removeAllItems();
+                Sentido.addItem("Estacao CP - Avenida Robert Smith");
+                Sentido.addItem("Avenida Robert Smith - Estacao CP");
+            } else if (
+                CorLinha.getSelectedItem().equals("Azul")) {
+                Sentido.removeAllItems();
+                Sentido.addItem("E.Leclerc - Este");
+                Sentido.addItem("Este - E.Leclerc");
+            } else if (
+                CorLinha.getSelectedItem().equals("Verde")) {
+                Sentido.removeAllItems();
+                Sentido.addItem("Nova Arcada - Praça Conde de Agrolongo");
+                Sentido.addItem("Praça Conde de Agrolongo - Nova Arcada");
+            } else if (
+                CorLinha.getSelectedItem().equals("Vermelha")) {
+                Sentido.removeAllItems();
+                Sentido.addItem("Estacao CP - Hospital");
+                Sentido.addItem("Hospital - Estacao CP");
+            }
+            TipoDia.removeAllItems();
+            TipoDia.addItem("Dias Uteis e Sabados");
+            TipoDia.addItem("Domingos e Feriados");
+            BotaoConfirmarLinhas.setEnabled(true);
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }//GEN-LAST:event_CorLinhaActionPerformed
 
     private void SentidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SentidoActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_SentidoActionPerformed
 
     private void TipoDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDiaActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_TipoDiaActionPerformed
+
+    private void TipoDiaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TipoDiaItemStateChanged
+
+    }//GEN-LAST:event_TipoDiaItemStateChanged
+
+    private void BotaoConfirmarLinhasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoConfirmarLinhasActionPerformed
+        /**PainelTexto.setText(null);
+        
+        PainelTexto.append("\n Linha: "+CorLinhaString+"\n Sentido: "+SentidoString+"\n Tipo de Dia: "+TipoDiaString);
+        */
+        try{
+            DefaultTableModel model = (DefaultTableModel) TabelaHorario.getModel();
+            model.setRowCount(0);
+            
+            String CorLinhaString = (String)  CorLinha.getSelectedItem();
+            String SentidoString = (String)  Sentido.getSelectedItem();               
+            // String TipoDiaString = (String)  TipoDia.getSelectedItem();
+            
+            
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DAI?useSSL=false","root","password");
+            
+            Statement st = con.createStatement();
+            String sql = "select * from HorarioLinhas";
+            ResultSet rs = st.executeQuery(sql);
+            
+            while(rs.next()){
+                String linhas = rs.getString("linhas");
+                String sentido = rs.getString("sentido");
+                String Horario = String.valueOf(rs.getTime("horario"));
+                String Paragem  = rs.getString("paragem");           
+                
+                if(linhas.equals(CorLinhaString) && sentido.equals(SentidoString)){
+                    String tbData[] = {Horario, Paragem};
+                    DefaultTableModel tblModel = (DefaultTableModel) TabelaHorario.getModel();
+
+                    tblModel.addRow(tbData); 
+                }
+            }
+            
+            con.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_BotaoConfirmarLinhasActionPerformed
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        dispose();
+        MenuBRT Voltar = new MenuBRT();
+        Voltar.setVisible(true);
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -189,62 +362,14 @@ public class MenuLinhas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotaoConfirmarLinhas;
     private javax.swing.JComboBox<String> CorLinha;
-    private javax.swing.JPanel Fundo;
     private javax.swing.JComboBox<String> Sentido;
-    private javax.swing.JLabel TUB_logo;
+    private javax.swing.JTable TabelaHorario;
     private javax.swing.JComboBox<String> TipoDia;
-    private java.awt.Panel Topo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
-
-    
-    public class BPosTextArea extends JTextArea {
-
-        private int radius;
-
-        public BPosTextArea() {
-            super(10, 20);
-            setOpaque(false);
-            setBorder(null);
-            setRadius(20);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, getRadius(), getRadius());
-            super.paintComponent(g);
-        }
-
-        @Override
-        protected void paintBorder(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(new Color(102, 102, 102));
-            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, getRadius(), getRadius());
-        }
-
-        public void setRadius(int radius) {
-            this.radius = radius;
-            repaint();
-        }
-
-        public int getRadius() {
-            return radius;
-        }
-
-        @Override
-        public Insets getInsets() {
-            int value = getRadius() / 2;
-            return new Insets(value, value, value, value);
-        }
-
-    }
-    
 }
-
