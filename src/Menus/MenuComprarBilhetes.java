@@ -4,6 +4,8 @@
  */
 package Menus;
 
+import javax.swing.ButtonGroup;
+
 /**
  *
  * @author tomas
@@ -15,6 +17,43 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
      */
     public MenuComprarBilhetes() {
         initComponents();
+
+        
+        TipoDeBilhete.removeAllItems();
+        
+        TipoDeBilhete.addItem("Único");
+        TipoDeBilhete.addItem("Personalizado");
+    
+        /*TipoDeBilhete.setSelectedItem(null);
+    
+        if(TipoDeBilhete.equals("Único")){
+        CorLinha.setVisible(true);
+        Quantidade.setVisible(true);
+        Painel.setVisible(true);
+        }*/
+        
+        CorLinha.removeAllItems();
+        
+        CorLinha.addItem("Amarela");
+        CorLinha.addItem("Azul");
+        CorLinha.addItem("Verde");
+        CorLinha.addItem("Vermelha");
+        
+        CorLinha.setSelectedItem(null);
+        
+        
+        Quantidade.removeAllItems();
+         /*73 verde 74 vermelho 75 amarela 76 azul*/
+        Quantidade.addItem("1");
+        Quantidade.addItem("3");
+        Quantidade.addItem("5");
+        Quantidade.addItem("10");
+        
+        Quantidade.setSelectedItem(null);
+        
+        
+        Continuar.setEnabled(false);
+        
     }
 
     /**
@@ -26,9 +65,29 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
         jPanel1 = new javax.swing.JPanel();
         panel1 = new java.awt.Panel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        TipoDeBilhete = new javax.swing.JComboBox<>();
+        CorLinha = new javax.swing.JComboBox<>();
+        Quantidade = new javax.swing.JComboBox<>();
+        Painel = new javax.swing.JPanel();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        javax.swing.JLabel TextoCorLinha3 = new javax.swing.JLabel();
+        javax.swing.JLabel TextoCorLinha4 = new javax.swing.JLabel();
+        Continuar = new javax.swing.JButton();
+        javax.swing.JLabel TextoTipoBilhete = new javax.swing.JLabel();
+        javax.swing.JLabel TextoCorLinha = new javax.swing.JLabel();
+        javax.swing.JLabel TextoQuantidade = new javax.swing.JLabel();
+
+        jScrollPane1.setViewportView(jEditorPane1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 71, 103));
@@ -40,6 +99,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 71, 103));
         jPanel1.setForeground(new java.awt.Color(0, 71, 103));
+        jPanel1.setPreferredSize(new java.awt.Dimension(426, 931));
 
         panel1.setBackground(new java.awt.Color(3, 125, 190));
         panel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -47,46 +107,283 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/TUB.png"))); // NOI18N
 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/notificacao.png"))); // NOI18N
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/do-utilizador.png"))); // NOI18N
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/seta-esquerda.png"))); // NOI18N
+        jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel4.setMaximumSize(new java.awt.Dimension(70, 70));
+        jLabel4.setMinimumSize(new java.awt.Dimension(70, 70));
+        jLabel4.setPreferredSize(new java.awt.Dimension(70, 70));
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+            .addGroup(panel1Layout.createSequentialGroup()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+            .addGroup(panel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
+
+        TipoDeBilhete.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        TipoDeBilhete.setToolTipText("");
+        TipoDeBilhete.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        TipoDeBilhete.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        TipoDeBilhete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TipoDeBilheteActionPerformed(evt);
+            }
+        });
+
+        CorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        CorLinha.setToolTipText("");
+        CorLinha.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        CorLinha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CorLinhaActionPerformed(evt);
+            }
+        });
+
+        Quantidade.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        Quantidade.setToolTipText("");
+        Quantidade.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        Quantidade.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Quantidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                QuantidadeActionPerformed(evt);
+            }
+        });
+
+        Painel.setBackground(new java.awt.Color(255, 255, 255));
+        Painel.setForeground(new java.awt.Color(0, 71, 103));
+
+        jRadioButton1.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        jRadioButton1.setForeground(new java.awt.Color(0, 71, 103));
+        jRadioButton1.setText("Cartão de Débito/Crédito");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton2.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        jRadioButton2.setForeground(new java.awt.Color(0, 71, 103));
+        jRadioButton2.setText("Multibanco");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
+
+        jRadioButton3.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        jRadioButton3.setForeground(new java.awt.Color(0, 71, 103));
+        jRadioButton3.setText("MB Way ");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
+
+        TextoCorLinha3.setBackground(new java.awt.Color(0, 71, 103));
+        TextoCorLinha3.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoCorLinha3.setForeground(new java.awt.Color(0, 71, 103));
+        TextoCorLinha3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        TextoCorLinha3.setText("Preço:");
+
+        TextoCorLinha4.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoCorLinha4.setForeground(new java.awt.Color(0, 71, 103));
+        TextoCorLinha4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        TextoCorLinha4.setText("Método de Pagamento");
+
+        Continuar.setBackground(new java.awt.Color(0, 71, 103));
+        Continuar.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        Continuar.setForeground(new java.awt.Color(255, 255, 255));
+        Continuar.setText("Continuar");
+        Continuar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ContinuarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout PainelLayout = new javax.swing.GroupLayout(Painel);
+        Painel.setLayout(PainelLayout);
+        PainelLayout.setHorizontalGroup(
+            PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PainelLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(TextoCorLinha4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                    .addComponent(TextoCorLinha3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(PainelLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jRadioButton1)
+                        .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jRadioButton3, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        PainelLayout.setVerticalGroup(
+            PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PainelLayout.createSequentialGroup()
+                .addComponent(TextoCorLinha3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TextoCorLinha4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addComponent(jRadioButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton2)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addComponent(Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+        );
+
+        TextoTipoBilhete.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoTipoBilhete.setForeground(new java.awt.Color(255, 255, 255));
+        TextoTipoBilhete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoTipoBilhete.setText("Tipo de Bilhete");
+
+        TextoCorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoCorLinha.setForeground(new java.awt.Color(255, 255, 255));
+        TextoCorLinha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoCorLinha.setText("Cor da Linha");
+
+        TextoQuantidade.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
+        TextoQuantidade.setForeground(new java.awt.Color(255, 255, 255));
+        TextoQuantidade.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoQuantidade.setText("Quantidade");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextoTipoBilhete, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                            .addComponent(TextoCorLinha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TextoQuantidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(TipoDeBilhete, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(CorLinha, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(Quantidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(Painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(850, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(TextoTipoBilhete, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TipoDeBilhete, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TextoCorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(CorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TextoQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(Quantidade, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(Painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+ButtonGroup buttonGroup = new ButtonGroup();
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+
+    // Crie um novo Button Group
+
+    // Adicione os botões de opção ao Button Group
+    buttonGroup.add(jRadioButton1);
+    // Agora os botões de opção estão agrupados
+    jRadioButton1.setVisible(true);
+    // Dispose da janela atual
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        buttonGroup.add(jRadioButton2);
+// TODO add your handling code here:
+        jRadioButton2.setVisible(true);
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+        buttonGroup.add(jRadioButton3);
+        
+        jRadioButton3.setVisible(true);
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
+    private void TipoDeBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDeBilheteActionPerformed
+
+    }//GEN-LAST:event_TipoDeBilheteActionPerformed
+
+    private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CorLinhaActionPerformed
+
+    private void QuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuantidadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_QuantidadeActionPerformed
+
+    private void ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContinuarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ContinuarActionPerformed
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        dispose();
+        MenuBRT Voltar = new MenuBRT();
+        Voltar.setVisible(true);
+    }//GEN-LAST:event_jLabel4MouseClicked
 
     /**
      * @param args the command line arguments
@@ -102,8 +399,21 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Continuar;
+    private javax.swing.JComboBox<String> CorLinha;
+    private javax.swing.JPanel Painel;
+    private javax.swing.JComboBox<String> Quantidade;
+    private javax.swing.JComboBox<String> TipoDeBilhete;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }
