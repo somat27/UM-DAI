@@ -5,6 +5,13 @@
 
 package Menus;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.lang.System.Logger;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -305,44 +312,38 @@ public class MenuLinhas extends javax.swing.JFrame {
     }//GEN-LAST:event_TipoDiaItemStateChanged
 
     private void BotaoConfirmarLinhasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoConfirmarLinhasActionPerformed
-        /**PainelTexto.setText(null);
+        String CorLinhaString = (String)  CorLinha.getSelectedItem();
+        String SentidoString = (String)  Sentido.getSelectedItem();   
         
-        PainelTexto.append("\n Linha: "+CorLinhaString+"\n Sentido: "+SentidoString+"\n Tipo de Dia: "+TipoDiaString);
-        */
-        try{
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
+        File file = new File(filePath);
+        
+        try {
             DefaultTableModel model = (DefaultTableModel) TabelaHorario.getModel();
             model.setRowCount(0);
             
-            String CorLinhaString = (String)  CorLinha.getSelectedItem();
-            String SentidoString = (String)  Sentido.getSelectedItem();               
-            // String TipoDiaString = (String)  TipoDia.getSelectedItem();
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
             
+            DefaultTableModel tblModel = (DefaultTableModel)TabelaHorario.getModel();
+            Object[] lines = br.lines().toArray();
             
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/DAI?useSSL=false","root","password");
-            
-            Statement st = con.createStatement();
-            String sql = "select * from HorarioLinhas";
-            ResultSet rs = st.executeQuery(sql);
-            
-            while(rs.next()){
-                String linhas = rs.getString("linhas");
-                String sentido = rs.getString("sentido");
-                String Horario = String.valueOf(rs.getTime("horario"));
-                String Paragem  = rs.getString("paragem");           
-                
-                if(linhas.equals(CorLinhaString) && sentido.equals(SentidoString)){
-                    String tbData[] = {Horario, Paragem};
-                    DefaultTableModel tblModel = (DefaultTableModel) TabelaHorario.getModel();
-
-                    tblModel.addRow(tbData); 
+            for(int i = 0; i < lines.length; i++){
+                String[] row = lines[i].toString().split(",");
+                String CorLinhaStringFile = row[0];
+                String SentidoStringFile = row[1];
+                String HorarioStringFile = row[2];
+                String ParagemStringFile = row[3];
+                if(CorLinhaString.equals(CorLinhaStringFile) && SentidoString.equals(SentidoStringFile)){
+                    String tbData[] = {HorarioStringFile, ParagemStringFile};
+                    tblModel.addRow(tbData);
                 }
             }
             
-            con.close();
-        }catch(Exception e){
-            System.out.println(e);
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
         }
+        
     }//GEN-LAST:event_BotaoConfirmarLinhasActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked

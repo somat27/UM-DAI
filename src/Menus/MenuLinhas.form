@@ -68,19 +68,11 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="CorLinha" min="-2" pref="380" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="Sentido" min="-2" pref="380" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="TipoDia" min="-2" pref="380" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="CorLinha" alignment="1" min="-2" pref="380" max="-2" attributes="0"/>
+                      <Component id="Sentido" alignment="1" min="-2" pref="380" max="-2" attributes="0"/>
+                      <Component id="TipoDia" alignment="1" min="-2" pref="380" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
