@@ -32,6 +32,10 @@ public class MenuBilhetes extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        BotaoAnterior = new javax.swing.JButton();
+        BotaoProximo = new javax.swing.JButton();
+        TextoPercurso = new javax.swing.JLabel();
+        TextoCaminho = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 71, 103));
@@ -56,6 +60,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
         jLabel5.setMaximumSize(new java.awt.Dimension(70, 70));
         jLabel5.setMinimumSize(new java.awt.Dimension(70, 70));
         jLabel5.setPreferredSize(new java.awt.Dimension(70, 70));
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/notificacao.png"))); // NOI18N
@@ -84,17 +93,63 @@ public class MenuBilhetes extends javax.swing.JFrame {
             .addComponent(TUB_logo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        BotaoAnterior.setText("Anterior");
+        BotaoAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoAnteriorActionPerformed(evt);
+            }
+        });
+
+        BotaoProximo.setText("Proximo");
+        BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoProximoActionPerformed(evt);
+            }
+        });
+
+        TextoPercurso.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36)); // NOI18N
+        TextoPercurso.setForeground(new java.awt.Color(255, 255, 255));
+        TextoPercurso.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoPercurso.setText("Percurso");
+
+        TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        TextoCaminho.setForeground(new java.awt.Color(255, 255, 255));
+        TextoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TextoCaminho.setText("jLabel1");
+
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
         Fundo.setLayout(FundoLayout);
         FundoLayout.setHorizontalGroup(
             FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Topo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Topo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(FundoLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(BotaoAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46))
+            .addGroup(FundoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(TextoPercurso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(FundoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(TextoCaminho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         FundoLayout.setVerticalGroup(
             FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(FundoLayout.createSequentialGroup()
                 .addComponent(Topo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(850, Short.MAX_VALUE))
+                .addGap(52, 52, 52)
+                .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BotaoAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addComponent(TextoPercurso, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TextoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(599, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -112,6 +167,20 @@ public class MenuBilhetes extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BotaoAnteriorActionPerformed
+
+    private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BotaoProximoActionPerformed
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        dispose();
+        MenuBRT Voltar = new MenuBRT();
+        Voltar.setVisible(true);
+    }//GEN-LAST:event_jLabel5MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -126,8 +195,12 @@ public class MenuBilhetes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotaoAnterior;
+    private javax.swing.JButton BotaoProximo;
     private javax.swing.JPanel Fundo;
     private javax.swing.JLabel TUB_logo;
+    private javax.swing.JLabel TextoCaminho;
+    private javax.swing.JLabel TextoPercurso;
     private java.awt.Panel Topo;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
