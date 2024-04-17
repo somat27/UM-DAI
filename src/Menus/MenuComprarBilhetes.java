@@ -101,9 +101,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 break;
         }
 
-        float valorTotal = valor * quantidadeSelecionada;
+        valor = valor * quantidadeSelecionada;
 
-        Preco.setText(String.valueOf(valorTotal));
+        Preco.setText(String.valueOf(valor));
     } else {
         // Lidar com o caso em que nenhum item foi selecionado na quantidade
         Preco.setText("0.00");
