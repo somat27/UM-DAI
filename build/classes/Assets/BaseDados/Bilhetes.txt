@@ -1,0 +1,42 @@
+Amarela,Estacao CP - Avenida Robert Smith,08:00:00,Estação CP
+Amarela,Estacao CP - Avenida Robert Smith,08:05:00,Praça Conde de Agrolongo
+Amarela,Estacao CP - Avenida Robert Smith,08:10:00,Avenida António Macedo
+Amarela,Estacao CP - Avenida Robert Smith,08:15:00,Avenida Padre Júlio Fragata
+Amarela,Estacao CP - Avenida Robert Smith,08:20:00,Avenida Robert Smith
+Amarela,Avenida Robert Smith - Estacao CP,08:20:00,Avenida Robert Smith
+Amarela,Avenida Robert Smith - Estacao CP,08:25:00,Avenida Padre Júlio Fragata
+Amarela,Avenida Robert Smith - Estacao CP,08:30:00,Avenida António Macedo
+Amarela,Avenida Robert Smith - Estacao CP,08:35:00,Praça Conde de Agrolongo
+Amarela,Avenida Robert Smith - Estacao CP,08:40:00,Estação CP
+Azul,E.Leclerc - Este,09:00:00,E.Leclerc
+Azul,E.Leclerc - Este,09:05:00,Estação CP
+Azul,E.Leclerc - Este,09:10:00,Avenida da Imaculada Conceição
+Azul,E.Leclerc - Este,09:15:00,Praça Conde de Agrolongo
+Azul,E.Leclerc - Este,09:20:00,Avenida da João XXI
+Azul,E.Leclerc - Este,09:25:00,Avenida João Paulo II
+Azul,E.Leclerc - Este,09:30:00,Este
+Azul,Este - E.Leclerc,09:30:00,Este
+Azul,Este - E.Leclerc,09:35:00,Avenida João Paulo II
+Azul,Este - E.Leclerc,09:40:00,Avenida da João XXI
+Azul,Este - E.Leclerc,09:45:00,Praça Conde de Agrolongo
+Azul,Este - E.Leclerc,09:50:00,Estação CP
+Azul,Este - E.Leclerc,09:55:00,Avenida da Imaculada Conceição
+Azul,Este - E.Leclerc,10:00:00,E.Leclerc
+Verde,Nova Arcada - Praça Conde de Agrolongo,10:00:00,Nova Arcada
+Verde,Nova Arcada - Praça Conde de Agrolongo,10:05:00,Avenida António Macedo
+Verde,Nova Arcada - Praça Conde de Agrolongo,10:10:00,Praça Conde de Agrolongo
+Verde,Praça Conde de Agrolongo - Nova Arcada,10:10:00,Praça Conde de Agrolongo
+Verde,Praça Conde de Agrolongo - Nova Arcada,10:15:00,Avenida António Macedo
+Verde,Praça Conde de Agrolongo - Nova Arcada,10:20:00,Nova Arcada
+Vermelha,Estacao CP - Hospital,11:00:00,Estação CP
+Vermelha,Estacao CP - Hospital,11:05:00,Avenida da Imaculada Conceição
+Vermelha,Estacao CP - Hospital,11:10:00,Avenida da João XXI
+Vermelha,Estacao CP - Hospital,11:15:00,Avenida João Paulo II
+Vermelha,Estacao CP - Hospital,11:20:00,Universidade do Minho
+Vermelha,Estacao CP - Hospital,11:25:00,Hospital
+Vermelha,Hospital - Estacao CP,11:25:00,Hospital
+Vermelha,Hospital - Estacao CP,11:30:00,Universidade do Minho
+Vermelha,Hospital - Estacao CP,11:35:00,Avenida João Paulo II
+Vermelha,Hospital - Estacao CP,11:40:00,Avenida da João XXI
+Vermelha,Hospital - Estacao CP,11:45:00,Avenida da Imaculada Conceição
+Vermelha,Hospital - Estacao CP,11:50:00,Estação CP

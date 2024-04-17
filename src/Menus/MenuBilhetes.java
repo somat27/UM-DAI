@@ -4,17 +4,25 @@
  */
 package Menus;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 /**
  *
  * @author tomas
  */
 public class MenuBilhetes extends javax.swing.JFrame {
-
+    
+    private int pagina = 0;
     /**
      * Creates new form Login_Application
      */
     public MenuBilhetes() {
         initComponents();
+        BotaoAnterior.setEnabled(false);
+        TextoCaminho.setText("Estacao CP - Avenida Robert Smith");
     }
 
     /**
@@ -168,11 +176,77 @@ public class MenuBilhetes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-        // TODO add your handling code here:
+        String SentidoString = (String)  TextoCaminho.getText();
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
+        File file = new File(filePath);
+        
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            Object[] lines = br.lines().toArray();
+            for(int i = 0; i < lines.length ; i++){
+                String[] row = lines[i].toString().split(",");
+                String CorLinhaStringFile = row[0];
+                String SentidoStringFile = row[1];
+                String HorarioStringFile = row[2];
+                String ParagemStringFile = row[3];
+                if(SentidoString.equals(SentidoStringFile)) {
+                    do {
+                        pagina--;
+                        row = lines[i++].toString().split(",");
+                        SentidoStringFile = row[1];
+                        if(!SentidoString.equals(SentidoStringFile)) {
+                            TextoCaminho.setText(SentidoStringFile);
+                            i = lines.length;
+                            if(pagina == 0)
+                                BotaoAnterior.setEnabled(false);
+                        }
+                    } while(i < lines.length);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        }
+        BotaoProximo.setEnabled(true);
+                System.out.println("Anterior: " + pagina);
     }//GEN-LAST:event_BotaoAnteriorActionPerformed
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        // TODO add your handling code here:
+        String[] CorLinhaStringFile = null;
+        String[] SentidoStringFile = null;
+        String[] HorarioStringFile = null;
+        String[] ParagemStringFile = null;
+        int totalLinhas = 0;
+        String SentidoString = (String)  TextoCaminho.getText();
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
+        File file = new File(filePath);
+        
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            Object[] lines = br.lines().toArray();
+            for(int i = 0; i < lines.length ; i++){
+                String[] row = lines[i].toString().split(",");
+                CorLinhaStringFile[i] = row[0];
+                SentidoStringFile[i] = row[1];
+                HorarioStringFile[i] = row[2];
+                ParagemStringFile[i] = row[3];
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        }
+        System.out.println(totalLinhas);
+        
+        for(int i = 0; i < totalLinhas; i++) {
+            if(SentidoString.equals(SentidoStringFile[i]) && !SentidoString.equals(SentidoStringFile[i+1])) {
+                pagina = i;
+                if(pagina > totalLinhas) {
+                    BotaoProximo.setEnabled(false);
+                }
+            }
+        }        
+        BotaoAnterior.setEnabled(true);
+                System.out.println("Proximo: " + pagina);
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
