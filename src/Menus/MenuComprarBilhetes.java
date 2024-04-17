@@ -4,26 +4,30 @@
  */
 package Menus;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author tomas
  */
 public class MenuComprarBilhetes extends javax.swing.JFrame {
-
+        float valor = 0.0f;
     /**
+
      * Creates new form Login_Application
      */
     public MenuComprarBilhetes() {
         initComponents();
-
         
         TipoDeBilhete.removeAllItems();
-        
         TipoDeBilhete.addItem("Único");
-        TipoDeBilhete.addItem("Personalizado");
-    
+        TipoDeBilhete.addItem("Personalizado (não implementado)");
+        TipoDeBilhete.setSelectedItem(null); 
         /*TipoDeBilhete.setSelectedItem(null);
     
         if(TipoDeBilhete.equals("Único")){
@@ -38,23 +42,75 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         CorLinha.addItem("Azul");
         CorLinha.addItem("Verde");
         CorLinha.addItem("Vermelha");
-        
-        CorLinha.setSelectedItem(null);
-        
-        
+        CorLinha.setSelectedItem(null); 
+
         Quantidade.removeAllItems();
          /*73 verde 74 vermelho 75 amarela 76 azul*/
         Quantidade.addItem("1");
         Quantidade.addItem("3");
         Quantidade.addItem("5");
         Quantidade.addItem("10");
+        Quantidade.setSelectedItem(null);  
         
-        Quantidade.setSelectedItem(null);
+
+        CorLinha.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            atualizarValorTotal();
+        }
+        });
+
+        Quantidade.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                atualizarValorTotal();
+            }
+        });
         
-        
+        atualizarValorTotal();
+
         Continuar.setEnabled(false);
+
         
     }
+
+    private void atualizarValorTotal() {
+    String corSelecionada = (String) CorLinha.getSelectedItem();
+    String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+
+    // Verifica se a quantidade selecionada é null
+    if (quantidadeSelecionadaStr != null) {
+        int quantidadeSelecionada = Integer.parseInt(quantidadeSelecionadaStr);
+
+
+        switch (corSelecionada) {
+            case "Amarela":
+                valor = 0.75f;
+                break;
+            case "Azul":
+                valor = 0.76f;
+                break;
+            case "Verde":
+                valor = 0.73f; 
+                break;
+            case "Vermelha":
+                valor = 0.74f; 
+                break;
+            default:
+                valor = 0.0f;
+                break;
+        }
+
+        float valorTotal = valor * quantidadeSelecionada;
+
+        Preco.setText(String.valueOf(valorTotal));
+    } else {
+        // Lidar com o caso em que nenhum item foi selecionado na quantidade
+        Preco.setText("0.00");
+    }
+ 
+    
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -77,12 +133,13 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         CorLinha = new javax.swing.JComboBox<>();
         Quantidade = new javax.swing.JComboBox<>();
         Painel = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        Cartao = new javax.swing.JRadioButton();
+        Multibanco = new javax.swing.JRadioButton();
+        MBWay = new javax.swing.JRadioButton();
         javax.swing.JLabel TextoCorLinha3 = new javax.swing.JLabel();
         javax.swing.JLabel TextoCorLinha4 = new javax.swing.JLabel();
         Continuar = new javax.swing.JButton();
+        Preco = new javax.swing.JLabel();
         javax.swing.JLabel TextoTipoBilhete = new javax.swing.JLabel();
         javax.swing.JLabel TextoCorLinha = new javax.swing.JLabel();
         javax.swing.JLabel TextoQuantidade = new javax.swing.JLabel();
@@ -183,30 +240,30 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Painel.setBackground(new java.awt.Color(255, 255, 255));
         Painel.setForeground(new java.awt.Color(0, 71, 103));
 
-        jRadioButton1.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
-        jRadioButton1.setForeground(new java.awt.Color(0, 71, 103));
-        jRadioButton1.setText("Cartão de Débito/Crédito");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        Cartao.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        Cartao.setForeground(new java.awt.Color(0, 71, 103));
+        Cartao.setText("Cartão de Débito/Crédito");
+        Cartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                CartaoActionPerformed(evt);
             }
         });
 
-        jRadioButton2.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
-        jRadioButton2.setForeground(new java.awt.Color(0, 71, 103));
-        jRadioButton2.setText("Multibanco");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        Multibanco.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        Multibanco.setForeground(new java.awt.Color(0, 71, 103));
+        Multibanco.setText("Multibanco");
+        Multibanco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                MultibancoActionPerformed(evt);
             }
         });
 
-        jRadioButton3.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
-        jRadioButton3.setForeground(new java.awt.Color(0, 71, 103));
-        jRadioButton3.setText("MB Way ");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        MBWay.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        MBWay.setForeground(new java.awt.Color(0, 71, 103));
+        MBWay.setText("MB Way ");
+        MBWay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                MBWayActionPerformed(evt);
             }
         });
 
@@ -231,6 +288,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             }
         });
 
+        Preco.setText("jLabel5");
+
         javax.swing.GroupLayout PainelLayout = new javax.swing.GroupLayout(Painel);
         Painel.setLayout(PainelLayout);
         PainelLayout.setHorizontalGroup(
@@ -239,30 +298,40 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(TextoCorLinha4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                    .addComponent(TextoCorLinha3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PainelLayout.createSequentialGroup()
+                        .addComponent(TextoCorLinha3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Preco)
+                        .addGap(148, 148, 148))))
             .addGroup(PainelLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jRadioButton1)
-                        .addComponent(jRadioButton2, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jRadioButton3, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(PainelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(Multibanco)
+                        .addGap(180, 180, 180))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PainelLayout.createSequentialGroup()
+                        .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(MBWay, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Continuar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Cartao, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         PainelLayout.setVerticalGroup(
             PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PainelLayout.createSequentialGroup()
-                .addComponent(TextoCorLinha3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Preco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TextoCorLinha3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextoCorLinha4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addComponent(jRadioButton1)
+                .addComponent(Cartao)
                 .addGap(18, 18, 18)
-                .addComponent(jRadioButton2)
+                .addComponent(Multibanco)
                 .addGap(18, 18, 18)
-                .addComponent(jRadioButton3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
+                .addComponent(MBWay)
+                .addGap(63, 63, 63)
                 .addComponent(Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
@@ -288,20 +357,19 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(TextoTipoBilhete, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                            .addComponent(TextoCorLinha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TextoQuantidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(TipoDeBilhete, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CorLinha, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Quantidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(Painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(TextoTipoBilhete, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(TextoCorLinha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TextoQuantidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(TipoDeBilhete, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(CorLinha, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Quantidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(30, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Painel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,29 +407,35 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 ButtonGroup buttonGroup = new ButtonGroup();
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void CartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CartaoActionPerformed
 
-    // Crie um novo Button Group
 
-    // Adicione os botões de opção ao Button Group
-    buttonGroup.add(jRadioButton1);
+    buttonGroup.add(Cartao);
     // Agora os botões de opção estão agrupados
-    jRadioButton1.setVisible(true);
+    Cartao.setVisible(true);
+            Continuar.setEnabled(true);
+
     // Dispose da janela atual
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_CartaoActionPerformed
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        buttonGroup.add(jRadioButton2);
+    private void MultibancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MultibancoActionPerformed
+        buttonGroup.add(Multibanco);
 // TODO add your handling code here:
-        jRadioButton2.setVisible(true);
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+        Multibanco.setVisible(true);
+        Continuar.setEnabled(true);
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+    }//GEN-LAST:event_MultibancoActionPerformed
+    
+    private void MBWayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MBWayActionPerformed
         // TODO add your handling code here:
-        buttonGroup.add(jRadioButton3);
+        buttonGroup.add(MBWay);
         
-        jRadioButton3.setVisible(true);
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+        MBWay.setVisible(true);
+        Continuar.setEnabled(true);
+
+
+        
+    }//GEN-LAST:event_MBWayActionPerformed
 
     private void TipoDeBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDeBilheteActionPerformed
 
@@ -376,7 +450,26 @@ ButtonGroup buttonGroup = new ButtonGroup();
     }//GEN-LAST:event_QuantidadeActionPerformed
 
     private void ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContinuarActionPerformed
-        // TODO add your handling code here:
+                if (Multibanco.isSelected()) {
+                    Random random = new Random();
+                    long randomN = random.nextInt(100000001);
+                    String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
+                    JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
+            }else if(MBWay.isSelected()){
+                    String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
+                    /*if (input != null && !input.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Contacto: " + input);
+        } */
+            }else if(Cartao.isSelected()){
+                 String numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
+                 String dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
+                 String cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
+                 String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
+                 JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+
+            }
+             
+        
     }//GEN-LAST:event_ContinuarActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
@@ -392,16 +485,20 @@ ButtonGroup buttonGroup = new ButtonGroup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            public void run(){
                 new MenuComprarBilhetes().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton Cartao;
     private javax.swing.JButton Continuar;
     private javax.swing.JComboBox<String> CorLinha;
+    private javax.swing.JRadioButton MBWay;
+    private javax.swing.JRadioButton Multibanco;
     private javax.swing.JPanel Painel;
+    private javax.swing.JLabel Preco;
     private javax.swing.JComboBox<String> Quantidade;
     private javax.swing.JComboBox<String> TipoDeBilhete;
     private javax.swing.JEditorPane jEditorPane1;
@@ -410,9 +507,6 @@ ButtonGroup buttonGroup = new ButtonGroup();
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
