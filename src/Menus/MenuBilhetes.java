@@ -4,16 +4,105 @@
  */
 package Menus;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+
 
 /**
  *
  * @author tomas
  */
 public class MenuBilhetes extends javax.swing.JFrame {
+    String linhaSelecionada = "Amarela";
+    // Adicionar no Anterior e no Proximo o nome das linhas, e muda automaticamente quando se clica
+    public void iniciarBilhete() {
+        BotaoAnterior.setEnabled(false);
+        BotaoAnterior.setText("<< Linha Amarela");
+        BotaoProximo.setText("Linha Azul >>");
+        TextoPercurso.setText("Bilhetes - Amarela");
+    }
+    
+    public String[] LerBaseDados() {
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\Bilhetes.txt";
+        File file = new File(filePath);
+        
+        try {            
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            
+            Object[] lines = br.lines().toArray();
+            
+            for(int i = 0; i < lines.length; i++){
+                String[] row = lines[i].toString().split(",");
+                if (row[1].equals(linhaSelecionada)){
+                    return row;
+                }
+            }
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+    
+    public void mudarInfoTexto() {
+        String BaseDadosString[] = LerBaseDados();
+        if(BaseDadosString != null){
+            String idCliente = BaseDadosString[0];
+            String linha = BaseDadosString[1];
+            String quantidadeBilhetes = BaseDadosString[2];
+            String tipoBilhete = BaseDadosString[3];
+            String QrCodeString = "Linha: " + linha + "\nTipo Bilhete: "+ tipoBilhete+ "\nQuantidade: " + quantidadeBilhetes;
+            mudarInfoQrCode(QrCodeString);
+            
+            TextoCaminho.setText("\nQuantidade: " + quantidadeBilhetes);
+        } else {
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrVazio.png";
+            ImageIcon icon = new ImageIcon(filePath);
+            QrCode.setIcon(icon);
+            
+            TextoCaminho.setText("Quantidade: 0");
+        }
+    } 
+    
+    public void mudarInfoQrCode(String QrCodeData) {
+        try {
+            //String QrCodeData = "Teste";
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + linhaSelecionada + ".png";
+            String charset = "UTF-8";
+            
+            File file = new File(filePath);
+            if(file.exists()){
+                file.delete();
+            }
+            
+            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
+                    BarcodeFormat.QR_CODE,350,350,hintMap);
+
+            MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
+            
+            ImageIcon icon = new ImageIcon(filePath);
+            QrCode.setIcon(icon);
+            QrCode.setHorizontalAlignment(SwingConstants.CENTER);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
     
     private int pagina = 0;
     /**
@@ -21,8 +110,8 @@ public class MenuBilhetes extends javax.swing.JFrame {
      */
     public MenuBilhetes() {
         initComponents();
-        BotaoAnterior.setEnabled(false);
-        TextoCaminho.setText("Estacao CP - Avenida Robert Smith");
+        iniciarBilhete();
+        mudarInfoTexto();
     }
 
     /**
@@ -44,6 +133,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         BotaoProximo = new javax.swing.JButton();
         TextoPercurso = new javax.swing.JLabel();
         TextoCaminho = new javax.swing.JLabel();
+        QrCode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 71, 103));
@@ -118,12 +208,16 @@ public class MenuBilhetes extends javax.swing.JFrame {
         TextoPercurso.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36)); // NOI18N
         TextoPercurso.setForeground(new java.awt.Color(255, 255, 255));
         TextoPercurso.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        TextoPercurso.setText("Percurso");
+        TextoPercurso.setText("Bilhetes");
 
         TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
         TextoCaminho.setForeground(new java.awt.Color(255, 255, 255));
         TextoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TextoCaminho.setText("jLabel1");
+
+        QrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrVazio.png")));
+        QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
         Fundo.setLayout(FundoLayout);
@@ -144,6 +238,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(TextoCaminho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(QrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         FundoLayout.setVerticalGroup(
             FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,8 +251,9 @@ public class MenuBilhetes extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addComponent(TextoPercurso, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TextoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(599, Short.MAX_VALUE))
+                .addComponent(TextoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(QrCode, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -176,77 +272,67 @@ public class MenuBilhetes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-        String SentidoString = (String)  TextoCaminho.getText();
-        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
-        File file = new File(filePath);
-        
-        try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            Object[] lines = br.lines().toArray();
-            for(int i = 0; i < lines.length ; i++){
-                String[] row = lines[i].toString().split(",");
-                String CorLinhaStringFile = row[0];
-                String SentidoStringFile = row[1];
-                String HorarioStringFile = row[2];
-                String ParagemStringFile = row[3];
-                if(SentidoString.equals(SentidoStringFile)) {
-                    do {
-                        pagina--;
-                        row = lines[i++].toString().split(",");
-                        SentidoStringFile = row[1];
-                        if(!SentidoString.equals(SentidoStringFile)) {
-                            TextoCaminho.setText(SentidoStringFile);
-                            i = lines.length;
-                            if(pagina == 0)
-                                BotaoAnterior.setEnabled(false);
-                        }
-                    } while(i < lines.length);
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
+        if (linhaSelecionada.equals("Azul")) {
+            TextoPercurso.setText("Bilhetes - Amarela");
+            linhaSelecionada = "Amarela";
+            
+            BotaoAnterior.setEnabled(false);
+            BotaoProximo.setEnabled(true);
+            
+            BotaoProximo.setText("Linha Azul >>");
+            BotaoAnterior.setText("<< Linha Amarela");
+        } else if (linhaSelecionada.equals("Verde")) {
+            TextoPercurso.setText("Bilhetes - Azul");
+            linhaSelecionada = "Azul";
+            
+            BotaoAnterior.setEnabled(true);
+            BotaoProximo.setEnabled(true);
+            
+            BotaoProximo.setText("Linha Verde >>");
+            BotaoAnterior.setText("<< Linha Amarela");
+        } else if (linhaSelecionada.equals("Vermelha")) {
+            TextoPercurso.setText("Bilhetes - Verde");
+            linhaSelecionada = "Verde";
+            
+            BotaoAnterior.setEnabled(true);
+            BotaoProximo.setEnabled(true);
+            
+            BotaoProximo.setText("Linha Vermelha >>");
+            BotaoAnterior.setText("<< Linha Azul");
         }
-        BotaoProximo.setEnabled(true);
-                System.out.println("Anterior: " + pagina);
+        mudarInfoTexto();
     }//GEN-LAST:event_BotaoAnteriorActionPerformed
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        String[] CorLinhaStringFile = null;
-        String[] SentidoStringFile = null;
-        String[] HorarioStringFile = null;
-        String[] ParagemStringFile = null;
-        int totalLinhas = 0;
-        String SentidoString = (String)  TextoCaminho.getText();
-        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
-        File file = new File(filePath);
-        
-        try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            Object[] lines = br.lines().toArray();
-            for(int i = 0; i < lines.length ; i++){
-                String[] row = lines[i].toString().split(",");
-                CorLinhaStringFile[i] = row[0];
-                SentidoStringFile[i] = row[1];
-                HorarioStringFile[i] = row[2];
-                ParagemStringFile[i] = row[3];
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
+        if (linhaSelecionada.equals("Amarela")) {
+            TextoPercurso.setText("Bilhetes - Azul");
+            linhaSelecionada = "Azul";
+            
+            BotaoAnterior.setEnabled(true);
+            BotaoProximo.setEnabled(true);
+            
+            BotaoProximo.setText("Linha Verde >>");
+            BotaoAnterior.setText("<< Linha Amarela");
+        } else if (linhaSelecionada.equals("Azul")) {
+            TextoPercurso.setText("Bilhetes - Verde");
+            linhaSelecionada = "Verde";
+            
+            BotaoAnterior.setEnabled(true);
+            BotaoProximo.setEnabled(true);
+            
+            BotaoProximo.setText("Linha Vermelha >>");
+            BotaoAnterior.setText("<< Linha Azul");
+        } else if (linhaSelecionada.equals("Verde")) {
+            TextoPercurso.setText("Bilhetes - Vermelha");
+            linhaSelecionada = "Vermelha";
+            
+            BotaoAnterior.setEnabled(true);
+            BotaoProximo.setEnabled(false);
+            
+            BotaoProximo.setText("Linha Vermelha >>");
+            BotaoAnterior.setText("<< Linha Verde");
         }
-        System.out.println(totalLinhas);
-        
-        for(int i = 0; i < totalLinhas; i++) {
-            if(SentidoString.equals(SentidoStringFile[i]) && !SentidoString.equals(SentidoStringFile[i+1])) {
-                pagina = i;
-                if(pagina > totalLinhas) {
-                    BotaoProximo.setEnabled(false);
-                }
-            }
-        }        
-        BotaoAnterior.setEnabled(true);
-                System.out.println("Proximo: " + pagina);
+        mudarInfoTexto();
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
@@ -272,6 +358,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
     private javax.swing.JButton BotaoAnterior;
     private javax.swing.JButton BotaoProximo;
     private javax.swing.JPanel Fundo;
+    private javax.swing.JLabel QrCode;
     private javax.swing.JLabel TUB_logo;
     private javax.swing.JLabel TextoCaminho;
     private javax.swing.JLabel TextoPercurso;

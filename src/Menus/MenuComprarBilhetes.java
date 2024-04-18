@@ -9,6 +9,11 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -16,7 +21,58 @@ import javax.swing.JOptionPane;
  * @author tomas
  */
 public class MenuComprarBilhetes extends javax.swing.JFrame {
-        float valor = 0.0f;
+    float valor = 0.0f;
+    
+    public void EditarBaseDados(String corSelecionada, String quantidadeSelecionadaStr, String tipoBilhete) {
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\Bilhetes.txt";
+        
+        try {
+            List<String> linhas = new ArrayList<>();
+            
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String linhaAtual;
+            while((linhaAtual = reader.readLine()) != null) {
+                linhas.add(linhaAtual);
+            }
+            reader.close();
+            
+            boolean linhaEncontrada = false;
+            for(int i = 0; i < linhas.size(); i++){
+                String[] partes = linhas.get(i).split(",");
+                if(partes[1].equals(corSelecionada) && partes[3].equals(tipoBilhete)) {
+                    linhaEncontrada = true;
+                    int valorAtual = Integer.parseInt(partes[2]);
+                    int novoValorInt = Integer.parseInt(quantidadeSelecionadaStr);
+                    int novoValorTotal = valorAtual+novoValorInt;
+                    partes[2] = Integer.toString(novoValorTotal);
+                    linhas.set(i, String.join(",", partes));
+                    break;
+                }
+            }
+            
+            if(linhaEncontrada){
+                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+                for(String linha : linhas) {
+                    writer.write(linha);
+                    writer.newLine();
+                }
+                writer.close();
+            } else {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+                    writer.write("1,"+corSelecionada+","+quantidadeSelecionadaStr+","+tipoBilhete);
+                    writer.newLine();
+                    writer.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MenuComprarBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(MenuComprarBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     /**
 
      * Creates new form Login_Application
@@ -410,12 +466,12 @@ ButtonGroup buttonGroup = new ButtonGroup();
     private void CartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CartaoActionPerformed
 
 
-    buttonGroup.add(Cartao);
-    // Agora os botões de opção estão agrupados
-    Cartao.setVisible(true);
-            Continuar.setEnabled(true);
+        buttonGroup.add(Cartao);
+        // Agora os botões de opção estão agrupados
+        Cartao.setVisible(true);
+                Continuar.setEnabled(true);
 
-    // Dispose da janela atual
+        // Dispose da janela atual
     }//GEN-LAST:event_CartaoActionPerformed
 
     private void MultibancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MultibancoActionPerformed
@@ -450,26 +506,29 @@ ButtonGroup buttonGroup = new ButtonGroup();
     }//GEN-LAST:event_QuantidadeActionPerformed
 
     private void ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContinuarActionPerformed
-                if (Multibanco.isSelected()) {
-                    Random random = new Random();
-                    long randomN = random.nextInt(100000001);
-                    String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
-                    JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
-            }else if(MBWay.isSelected()){
-                    String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
-                    /*if (input != null && !input.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Contacto: " + input);
-        } */
-            }else if(Cartao.isSelected()){
-                 String numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
-                 String dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
-                 String cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
-                 String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
-                 JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
-
-            }
-             
+        String corSelecionada = (String) CorLinha.getSelectedItem();
+        String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+        String tipoBilhete = (String) TipoDeBilhete.getSelectedItem();
         
+        if (Multibanco.isSelected()) {
+            Random random = new Random();
+            long randomN = random.nextInt(100000001);
+            String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
+            JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
+        }else if(MBWay.isSelected()){
+            String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
+            /*if (input != null && !input.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Contacto: " + input);
+            } */
+        }else if(Cartao.isSelected()){
+            String numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
+            String dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
+            String cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
+            String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
+            JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+        }
+        // Guardar Base de Dados  
+        EditarBaseDados(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
     }//GEN-LAST:event_ContinuarActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked

@@ -78,6 +78,7 @@
                   <Component id="TextoCaminho" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
+              <Component id="QrCode" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -92,8 +93,9 @@
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   <Component id="TextoPercurso" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="TextoCaminho" min="-2" pref="70" max="-2" attributes="0"/>
-                  <EmptySpace pref="599" max="32767" attributes="0"/>
+                  <Component id="TextoCaminho" min="-2" pref="123" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="QrCode" pref="540" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -207,7 +209,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Percurso"/>
+            <Property name="text" type="java.lang.String" value="Bilhetes"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="TextoCaminho">
@@ -220,6 +222,15 @@
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="QrCode">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.ImageIcon(getClass().getResource(&quot;/Assets/QrVazio.png&quot;))" type="code"/>
+            </Property>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>
       </SubComponents>
