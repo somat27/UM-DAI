@@ -61,48 +61,24 @@ public class MenuBilhetes extends javax.swing.JFrame {
     public void mudarInfoTexto() {
         String BaseDadosString[] = LerBaseDados();
         if(BaseDadosString != null){
-            String idCliente = BaseDadosString[0];
-            String linha = BaseDadosString[1];
             String quantidadeBilhetes = BaseDadosString[2];
-            String tipoBilhete = BaseDadosString[3];
-            String QrCodeString = "Linha: " + linha + "\nTipo Bilhete: "+ tipoBilhete+ "\nQuantidade: " + quantidadeBilhetes;
-            mudarInfoQrCode(QrCodeString);
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + linhaSelecionada + quantidadeBilhetes + ".png";
+            ImageIcon icon = new ImageIcon(filePath);
+            QrCode.setIcon(icon);
+            QrCode.revalidate();
+            QrCode.repaint();
             
             TextoCaminho.setText("\nQuantidade: " + quantidadeBilhetes);
         } else {
             String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrVazio.png";
             ImageIcon icon = new ImageIcon(filePath);
             QrCode.setIcon(icon);
+            QrCode.revalidate();
+            QrCode.repaint();
             
             TextoCaminho.setText("Quantidade: 0");
         }
     } 
-    
-    public void mudarInfoQrCode(String QrCodeData) {
-        try {
-            //String QrCodeData = "Teste";
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + linhaSelecionada + ".png";
-            String charset = "UTF-8";
-            
-            File file = new File(filePath);
-            if(file.exists()){
-                file.delete();
-            }
-            
-            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
-                    BarcodeFormat.QR_CODE,350,350,hintMap);
-
-            MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
-            
-            ImageIcon icon = new ImageIcon(filePath);
-            QrCode.setIcon(icon);
-            QrCode.setHorizontalAlignment(SwingConstants.CENTER);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
     
     private int pagina = 0;
     /**
@@ -126,7 +102,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         Fundo = new javax.swing.JPanel();
         Topo = new java.awt.Panel();
         TUB_logo = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        BotaoVoltar = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         BotaoAnterior = new javax.swing.JButton();
@@ -152,15 +128,15 @@ public class MenuBilhetes extends javax.swing.JFrame {
         TUB_logo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TUB_logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/TUB.png"))); // NOI18N
 
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/seta-esquerda.png"))); // NOI18N
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel5.setMaximumSize(new java.awt.Dimension(70, 70));
-        jLabel5.setMinimumSize(new java.awt.Dimension(70, 70));
-        jLabel5.setPreferredSize(new java.awt.Dimension(70, 70));
-        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+        BotaoVoltar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        BotaoVoltar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/seta-esquerda.png"))); // NOI18N
+        BotaoVoltar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotaoVoltar.setMaximumSize(new java.awt.Dimension(70, 70));
+        BotaoVoltar.setMinimumSize(new java.awt.Dimension(70, 70));
+        BotaoVoltar.setPreferredSize(new java.awt.Dimension(70, 70));
+        BotaoVoltar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel5MouseClicked(evt);
+                BotaoVoltarMouseClicked(evt);
             }
         });
 
@@ -175,7 +151,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         TopoLayout.setHorizontalGroup(
             TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TopoLayout.createSequentialGroup()
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotaoVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(TUB_logo, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -187,7 +163,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
             TopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(BotaoVoltar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(TUB_logo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -335,11 +311,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
         mudarInfoTexto();
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
-    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+    private void BotaoVoltarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoVoltarMouseClicked
         dispose();
         MenuBRT Voltar = new MenuBRT();
         Voltar.setVisible(true);
-    }//GEN-LAST:event_jLabel5MouseClicked
+    }//GEN-LAST:event_BotaoVoltarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -357,6 +333,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoAnterior;
     private javax.swing.JButton BotaoProximo;
+    private javax.swing.JLabel BotaoVoltar;
     private javax.swing.JPanel Fundo;
     private javax.swing.JLabel QrCode;
     private javax.swing.JLabel TUB_logo;
@@ -365,6 +342,5 @@ public class MenuBilhetes extends javax.swing.JFrame {
     private java.awt.Panel Topo;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     // End of variables declaration//GEN-END:variables
 }

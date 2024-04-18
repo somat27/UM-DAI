@@ -4,7 +4,7 @@
  */
 package Main;
 
-import Menus.MenuLogin;
+import Menus.MenuBRT;
 
 /**
  *
@@ -16,7 +16,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MenuLogin Main = new MenuLogin();
+        MenuBRT Main = new MenuBRT();
         Main.setVisible(true);
     }
     

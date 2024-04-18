@@ -4,6 +4,12 @@
  */
 package Menus;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -12,8 +18,12 @@ import javax.swing.JOptionPane;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 
 /**
@@ -69,6 +79,64 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             }
         } catch (IOException ex) {
             Logger.getLogger(MenuComprarBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String[] LerBaseDados(String corSelecionada) {
+        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\Bilhetes.txt";
+        File file = new File(filePath);
+        
+        try {            
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            
+            Object[] lines = br.lines().toArray();
+            
+            for(int i = 0; i < lines.length; i++){
+                String[] row = lines[i].toString().split(",");
+                if (row[1].equals(corSelecionada)){
+                    return row;
+                }
+            }
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+    
+    public void GerarQrCode(String corSelecionada, String quantidadeBilhetes, String tipoBilhete) {
+        String QrCodeData = null;
+        String quantidadeBilhetesString = "0";
+        String quantidadeBilhetesAntigo = "0";
+        String BaseDadosString[] = LerBaseDados(corSelecionada);
+        if(BaseDadosString != null){
+            String linhaString = BaseDadosString[1];
+            quantidadeBilhetesString = BaseDadosString[2];
+            int novaCompra = Integer.parseInt(quantidadeBilhetes);
+            int valorAtual = Integer.parseInt(quantidadeBilhetesString);
+            int novoValorTotal = valorAtual-novaCompra;
+            quantidadeBilhetesAntigo = Integer.toString(novoValorTotal);
+            String tipoBilheteString = BaseDadosString[3];
+            QrCodeData = "Linha: " + linhaString + "\nTipo Bilhete: "+ tipoBilheteString + "\nQuantidade: " + quantidadeBilhetesString;
+        }
+        
+        try {
+            //String QrCodeData = "Linha: " + corSelecionada + "\nTipo Bilhete: "+ tipoBilhete+ "\nQuantidade: " + quantidadeBilhetes;
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + corSelecionada + quantidadeBilhetesString + ".png";
+            String filePath2 = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + corSelecionada + quantidadeBilhetesAntigo + ".png";
+            File Antigo = new File(filePath2);
+            Antigo.delete();
+            String charset = "UTF-8";
+            
+            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
+                    BarcodeFormat.QR_CODE,350,350,hintMap);
+
+            MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
     
@@ -529,6 +597,8 @@ ButtonGroup buttonGroup = new ButtonGroup();
         }
         // Guardar Base de Dados  
         EditarBaseDados(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
+        GerarQrCode(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
+        
     }//GEN-LAST:event_ContinuarActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked

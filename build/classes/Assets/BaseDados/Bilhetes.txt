@@ -1,2 +1,0 @@
-1,Azul,14,Único
-1,Vermelha,7,Único
