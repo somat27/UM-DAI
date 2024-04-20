@@ -348,9 +348,9 @@
                       <Component id="Multibanco" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="MBWay" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="Continuar" min="-2" pref="46" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

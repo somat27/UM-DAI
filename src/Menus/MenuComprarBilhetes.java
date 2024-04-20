@@ -459,9 +459,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 .addComponent(Multibanco)
                 .addGap(18, 18, 18)
                 .addComponent(MBWay)
-                .addGap(63, 63, 63)
+                .addGap(18, 18, 18)
                 .addComponent(Continuar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addGap(64, 64, 64))
         );
 
         TextoTipoBilhete.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
@@ -577,7 +577,66 @@ ButtonGroup buttonGroup = new ButtonGroup();
         // TODO add your handling code here:
     }//GEN-LAST:event_QuantidadeActionPerformed
 
+    private boolean SotemDigito(String numero){
+    for (char a : numero.toCharArray()) {
+        if (!(a >= '0' && a <= '9')) {
+            return false;
+        }
+    }
+    return true; 
+    }
+    
+    private boolean FormatoMesAno(String MesAno){
+        if(MesAno.length()!=5){
+            JOptionPane.showMessageDialog(null, "A data deve estar no formato indicado de modo que contenha:\n  2 digitos para o mês!\n  1 barra!\n  2 digitos para o ano!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        String mes = MesAno.substring(0, 2);
+        char barra = MesAno.charAt(2);
+        String ano = MesAno.substring(3);
+        
+        if(mes.length() != 2){
+            JOptionPane.showMessageDialog(null, "O Mês deve conter 2 Digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(!(SotemDigito(mes))){
+            JOptionPane.showMessageDialog(null, "O Mês deve conter apenas Digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        int contarMes = Integer.parseInt(mes);
+        
+        if(contarMes < 1 || contarMes > 12){
+            JOptionPane.showMessageDialog(null, "O Mês deve estar compreendido entre 1 e 12!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        if(ano.length() != 2){
+            JOptionPane.showMessageDialog(null, "O Ano deve conter 2 Digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(!(SotemDigito(ano))){
+            JOptionPane.showMessageDialog(null, "O Ano deve conter apenas Digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        if(barra != '/'){
+            JOptionPane.showMessageDialog(null, "O 3 valor inserido deve ser uma / !", "Erro", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+    
     private void ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ContinuarActionPerformed
+        int count = 0;
+        int count2 = 0;
+        int count4 = 0;
+        String numeroCartao = null;
+        String dataValidade = null;
+        String cvc2 = null;
+        
         String corSelecionada = (String) CorLinha.getSelectedItem();
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
         String tipoBilhete = (String) TipoDeBilhete.getSelectedItem();
@@ -588,16 +647,75 @@ ButtonGroup buttonGroup = new ButtonGroup();
             String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
             JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
         }else if(MBWay.isSelected()){
+            while(count != 2){
             String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
-            /*if (input != null && !input.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Contacto: " + input);
-            } */
+            if(input.length()!= 9){
+            JOptionPane.showMessageDialog(null, "O número de telémovel deve ter 9 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            continue;
+            } else {
+                count++;
+            }
+            if(SotemDigito(input)){
+            count++;
+            } else {
+            JOptionPane.showMessageDialog(null, "O número de telémovel deve conter só digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            if(count == 2){
+                break;
+            } else {
+                count = 0 ;
+            }
+        }
         }else if(Cartao.isSelected()){
-            String numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
-            String dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
-            String cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
+            while(count2 != 2){
+                numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
+                if(numeroCartao.length()!= 16){
+                JOptionPane.showMessageDialog(null, "O número do cartão de crédito deve ter 16 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                continue;
+            } else {
+                count2++;
+            }
+            if(SotemDigito(numeroCartao)){
+                count2++;
+            } else {
+                JOptionPane.showMessageDialog(null, "O número do cartão deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            if(count2 == 2){
+                break;
+            } else {
+                count2 = 0 ;
+            }
+        }
+            while(true){
+                dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
+                if(FormatoMesAno(dataValidade)){
+                    break;
+                }
+                
+            }
+            while(count4 != 2){
+                cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
+                if(cvc2.length()!=3){
+                    JOptionPane.showMessageDialog(null, "O código CVC2 deve conter 3 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    continue;
+                } else{
+                    count4++;
+                }
+                if(SotemDigito(cvc2)){
+                    count4++;
+                } else{
+                    JOptionPane.showMessageDialog(null, "O código CVC2 deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+                if(count4 == 2){
+                    break;
+                } else{
+                    count4 = 0;
+                }
+            }
+            
             String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
             JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+
         }
         // Guardar Base de Dados  
         EditarBaseDados(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
