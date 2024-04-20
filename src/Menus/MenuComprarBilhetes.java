@@ -123,8 +123,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         
         try {
             //String QrCodeData = "Linha: " + corSelecionada + "\nTipo Bilhete: "+ tipoBilhete+ "\nQuantidade: " + quantidadeBilhetes;
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + corSelecionada + quantidadeBilhetesString + ".png";
-            String filePath2 = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + corSelecionada + quantidadeBilhetesAntigo + ".png";
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + corSelecionada + quantidadeBilhetesString + ".png";
+            String filePath2 = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + corSelecionada + quantidadeBilhetesAntigo + ".png";
             File Antigo = new File(filePath2);
             Antigo.delete();
             String charset = "UTF-8";
@@ -334,7 +334,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         TipoDeBilhete.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         TipoDeBilhete.setToolTipText("");
         TipoDeBilhete.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        TipoDeBilhete.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        TipoDeBilhete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         TipoDeBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TipoDeBilheteActionPerformed(evt);
@@ -344,7 +344,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         CorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         CorLinha.setToolTipText("");
         CorLinha.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         CorLinha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CorLinhaActionPerformed(evt);
@@ -354,7 +354,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Quantidade.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         Quantidade.setToolTipText("");
         Quantidade.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        Quantidade.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Quantidade.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Quantidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 QuantidadeActionPerformed(evt);
@@ -367,6 +367,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Cartao.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
         Cartao.setForeground(new java.awt.Color(0, 71, 103));
         Cartao.setText("Cartão de Débito/Crédito");
+        Cartao.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Cartao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CartaoActionPerformed(evt);
@@ -376,6 +377,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Multibanco.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
         Multibanco.setForeground(new java.awt.Color(0, 71, 103));
         Multibanco.setText("Multibanco");
+        Multibanco.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Multibanco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MultibancoActionPerformed(evt);
@@ -385,6 +387,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         MBWay.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
         MBWay.setForeground(new java.awt.Color(0, 71, 103));
         MBWay.setText("MB Way ");
+        MBWay.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         MBWay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MBWayActionPerformed(evt);
@@ -406,6 +409,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Continuar.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
         Continuar.setForeground(new java.awt.Color(255, 255, 255));
         Continuar.setText("Continuar");
+        Continuar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Continuar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ContinuarActionPerformed(evt);

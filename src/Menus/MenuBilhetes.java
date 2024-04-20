@@ -30,7 +30,8 @@ public class MenuBilhetes extends javax.swing.JFrame {
     // Adicionar no Anterior e no Proximo o nome das linhas, e muda automaticamente quando se clica
     public void iniciarBilhete() {
         BotaoAnterior.setEnabled(false);
-        BotaoAnterior.setText("<< Linha Amarela");
+        BotaoAnterior.setVisible(false);
+        BotaoAnterior.setText("");
         BotaoProximo.setText("Linha Azul >>");
         TextoPercurso.setText("Bilhetes - Amarela");
     }
@@ -62,7 +63,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         String BaseDadosString[] = LerBaseDados();
         if(BaseDadosString != null){
             String quantidadeBilhetes = BaseDadosString[2];
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\Qr-" + linhaSelecionada + quantidadeBilhetes + ".png";
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + linhaSelecionada + quantidadeBilhetes + ".png";
             ImageIcon icon = new ImageIcon(filePath);
             QrCode.setIcon(icon);
             QrCode.revalidate();
@@ -70,7 +71,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
             
             TextoCaminho.setText("\nQuantidade: " + quantidadeBilhetes);
         } else {
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrVazio.png";
+            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\QrVazio.png";
             ImageIcon icon = new ImageIcon(filePath);
             QrCode.setIcon(icon);
             QrCode.revalidate();
@@ -168,6 +169,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         );
 
         BotaoAnterior.setText("Anterior");
+        BotaoAnterior.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BotaoAnterior.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoAnteriorActionPerformed(evt);
@@ -175,6 +177,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         });
 
         BotaoProximo.setText("Proximo");
+        BotaoProximo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoProximoActionPerformed(evt);
@@ -192,7 +195,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         TextoCaminho.setText("jLabel1");
 
         QrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrVazio.png")));
+        QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrCodes/QrVazio.png")));
         QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
@@ -253,10 +256,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
             linhaSelecionada = "Amarela";
             
             BotaoAnterior.setEnabled(false);
+            BotaoAnterior.setVisible(false);
             BotaoProximo.setEnabled(true);
             
             BotaoProximo.setText("Linha Azul >>");
-            BotaoAnterior.setText("<< Linha Amarela");
+            BotaoAnterior.setText("");
         } else if (linhaSelecionada.equals("Verde")) {
             TextoPercurso.setText("Bilhetes - Azul");
             linhaSelecionada = "Azul";
@@ -272,6 +276,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
             
             BotaoAnterior.setEnabled(true);
             BotaoProximo.setEnabled(true);
+            BotaoProximo.setVisible(true);
             
             BotaoProximo.setText("Linha Vermelha >>");
             BotaoAnterior.setText("<< Linha Azul");
@@ -285,6 +290,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
             linhaSelecionada = "Azul";
             
             BotaoAnterior.setEnabled(true);
+            BotaoAnterior.setVisible(true);
             BotaoProximo.setEnabled(true);
             
             BotaoProximo.setText("Linha Verde >>");
@@ -295,6 +301,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
             
             BotaoAnterior.setEnabled(true);
             BotaoProximo.setEnabled(true);
+            BotaoProximo.setVisible(true);
             
             BotaoProximo.setText("Linha Vermelha >>");
             BotaoAnterior.setText("<< Linha Azul");
@@ -304,8 +311,9 @@ public class MenuBilhetes extends javax.swing.JFrame {
             
             BotaoAnterior.setEnabled(true);
             BotaoProximo.setEnabled(false);
+            BotaoProximo.setVisible(false);
             
-            BotaoProximo.setText("Linha Vermelha >>");
+            BotaoProximo.setText("");
             BotaoAnterior.setText("<< Linha Verde");
         }
         mudarInfoTexto();

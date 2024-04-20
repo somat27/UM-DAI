@@ -130,6 +130,7 @@ public class MenuLinhas extends javax.swing.JFrame {
         );
 
         TipoDia.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        TipoDia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         TipoDia.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 TipoDiaItemStateChanged(evt);
@@ -144,7 +145,7 @@ public class MenuLinhas extends javax.swing.JFrame {
         CorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         CorLinha.setToolTipText("");
         CorLinha.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        CorLinha.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         CorLinha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CorLinhaActionPerformed(evt);
@@ -152,6 +153,7 @@ public class MenuLinhas extends javax.swing.JFrame {
         });
 
         Sentido.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
+        Sentido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         Sentido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SentidoActionPerformed(evt);
@@ -176,6 +178,7 @@ public class MenuLinhas extends javax.swing.JFrame {
         BotaoConfirmarLinhas.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
         BotaoConfirmarLinhas.setText("Procurar Horarios");
         BotaoConfirmarLinhas.setToolTipText("");
+        BotaoConfirmarLinhas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BotaoConfirmarLinhas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BotaoConfirmarLinhas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,15 +206,10 @@ public class MenuLinhas extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
-                        .addComponent(CorLinha, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
-                        .addComponent(Sentido, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
-                        .addComponent(TipoDia, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30))))
+                    .addComponent(CorLinha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Sentido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TipoDia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
             .addGroup(FundoLayout.createSequentialGroup()
                 .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, FundoLayout.createSequentialGroup()
