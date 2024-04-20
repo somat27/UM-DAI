@@ -50,11 +50,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -205,10 +205,25 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(153, 0, 0));
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 0, 0), 1, true));
-        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jPanel3MouseClicked(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(153, 0, 0));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/entrada_branco.png"))); // NOI18N
+        jButton2.setBorder(null);
+        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -228,10 +243,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 8)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
         jLabel18.setText("de mobilidade!");
-
-        jButton2.setBackground(new java.awt.Color(153, 0, 0));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/entrada_branco.png"))); // NOI18N
-        jButton2.setBorder(null);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -495,10 +506,18 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+        
+    }//GEN-LAST:event_jPanel3MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         dispose();
         MenuBRT Menu = new MenuBRT();
         Menu.setVisible(true);
-    }//GEN-LAST:event_jPanel3MouseClicked
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 ButtonGroup buttonGroup = new ButtonGroup();
     /**
      * @param args the command line arguments
