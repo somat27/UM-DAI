@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author tomas
  */
-public class MenuBilhetes extends javax.swing.JFrame {
+public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     String linhaSelecionada = "Amarela";
     // Adicionar no Anterior e no Proximo o nome das linhas, e muda automaticamente quando se clica
     public void iniciarBilhete() {
@@ -47,29 +47,29 @@ public class MenuBilhetes extends javax.swing.JFrame {
 
             while (rs.next()) {
                 String linha = rs.getString("Linha");
-                String quantidade = rs.getString("Quantidade_Bilhetes");
-                String tipo = rs.getString("Tipo_Bilhete");
+                //String quantidade = rs.getString("Quantidade_Bilhetes");
+                //String tipo = rs.getString("Tipo_Bilhete");
                 
-                //String direcao = rs.getString("Direcao");
-                //String horario = rs.getString("Horario");
-                //String estacao = rs.getString("Estacao");
+                String direcao = rs.getString("Direcao");
+                String horario = rs.getString("Horario");
+                String estacao = rs.getString("Estacao");
 
-                resultados.add("Linha: " + linha + ", Quantidade: " + quantidade + ", Tipo: " + tipo);
-                //System.out.println(linha + " " + direcao + " " + horario + " " + estacao);
+                //resultados.add("Linha: " + linha + ", Quantidade: " + quantidade + ", Tipo: " + tipo);
+                System.out.println(linha + " " + direcao + " " + horario + " " + estacao);
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
                 if (con != null) con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        return resultados.toArray(new String[0]);
+        return null;//resultados.toArray(new String[0]);
     }
 
     
@@ -99,11 +99,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
     /**
      * Creates new form Login_Application
      */
-    public MenuBilhetes() {
+    public MenuBilhetePersonalizado() {
         initComponents();
         //iniciarBilhete();
         //mudarInfoTexto();
-        BotaoAnterior.setEnabled(false);
+        BotaoProximo.setEnabled(false);
      }
 
     /**
@@ -185,6 +185,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
 
         BotaoAnterior.setText("Único");
         BotaoAnterior.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotaoAnterior.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BotaoAnteriorMouseClicked(evt);
+            }
+        });
         BotaoAnterior.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoAnteriorActionPerformed(evt);
@@ -193,11 +198,6 @@ public class MenuBilhetes extends javax.swing.JFrame {
 
         BotaoProximo.setText("Personalizado");
         BotaoProximo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        BotaoProximo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                BotaoProximoMouseClicked(evt);
-            }
-        });
         BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoProximoActionPerformed(evt);
@@ -349,11 +349,11 @@ public class MenuBilhetes extends javax.swing.JFrame {
         Voltar.setVisible(true);
     }//GEN-LAST:event_BotaoVoltarMouseClicked
 
-    private void BotaoProximoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoMouseClicked
+    private void BotaoAnteriorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorMouseClicked
         dispose();
-        MenuBilhetePersonalizado Menu = new MenuBilhetePersonalizado();
+        MenuBilhetes Menu = new MenuBilhetes();
         Menu.setVisible(true);
-    }//GEN-LAST:event_BotaoProximoMouseClicked
+    }//GEN-LAST:event_BotaoAnteriorMouseClicked
 
     /**
      * @param args the command line arguments
@@ -363,7 +363,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MenuBilhetes().setVisible(true);
+                new MenuBilhetePersonalizado().setVisible(true);
             }
         });
     }

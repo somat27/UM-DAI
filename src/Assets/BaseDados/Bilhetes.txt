@@ -1,0 +1,2 @@
+1,Azul,2,Único
+1,Amarela,1,Único
