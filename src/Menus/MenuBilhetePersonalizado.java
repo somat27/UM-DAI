@@ -5,7 +5,9 @@
 package Menus;
 
 
-import com.sun.jdi.connect.spi.Connection;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +15,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import java.awt.image.BufferedImage;
 
 
 
@@ -23,40 +28,74 @@ import java.util.List;
  * @author tomas
  */
 public class MenuBilhetePersonalizado extends javax.swing.JFrame {
-    String linhaSelecionada = "Amarela";
-    // Adicionar no Anterior e no Proximo o nome das linhas, e muda automaticamente quando se clica
-    public void iniciarBilhete() {
-        BotaoAnterior.setEnabled(false);
-        BotaoAnterior.setVisible(false);
-        BotaoAnterior.setText("");
-        BotaoProximo.setText("Linha Azul >>");
-        TextoPercurso.setText("Bilhetes - Amarela");
+    public void GerarQrCode() {
+        String QrCodeData = LerBaseDados();
+        
+        try {
+            String charset = "UTF-8";
+            
+            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
+            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
+                    BarcodeFormat.QR_CODE,350,350,hintMap);
+
+            //MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
+            // Convertendo a matriz BitMatrix em uma imagem BufferedImage
+            int width = matrix.getWidth();
+            int height = matrix.getHeight();
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                }
+            }
+
+            // Convertendo a imagem BufferedImage em um ImageIcon
+            ImageIcon icon = new ImageIcon(image);
+            QrCode.setIcon(icon);
+            QrCode.revalidate();
+            QrCode.repaint();
+
+            TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     
-    public String[] LerBaseDados() {        
+    public String LerBaseDados() {        
         java.sql.Connection con = null;
         Statement st = null;
         ResultSet rs = null;
-        List<String> resultados = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
             st = con.createStatement();
             rs = st.executeQuery("SELECT * FROM Bilhetes");
+            int quantidadeAmarela = 0;
+            int quantidadeVerde = 0;
+            int quantidadeAzul = 0;
+            int quantidadeVermelha = 0;
 
             while (rs.next()) {
                 String linha = rs.getString("Linha");
-                //String quantidade = rs.getString("Quantidade_Bilhetes");
-                //String tipo = rs.getString("Tipo_Bilhete");
+                String quantidade = rs.getString("Quantidade_Bilhetes");
+                String tipo = rs.getString("Tipo_Bilhete");
                 
-                String direcao = rs.getString("Direcao");
-                String horario = rs.getString("Horario");
-                String estacao = rs.getString("Estacao");
-
-                //resultados.add("Linha: " + linha + ", Quantidade: " + quantidade + ", Tipo: " + tipo);
-                System.out.println(linha + " " + direcao + " " + horario + " " + estacao);
+                if(tipo.equals("Único")){
+                    if(linha.equals("Amarela")){
+                        quantidadeAmarela = Integer.parseInt(quantidade);
+                    }else if(linha.equals("Verde")){
+                        quantidadeVerde = Integer.parseInt(quantidade);;
+                    }else if(linha.equals("Azul")){
+                        quantidadeAzul = Integer.parseInt(quantidade);;
+                    }else if(linha.equals("Vermelha")){
+                        quantidadeVermelha = Integer.parseInt(quantidade);;
+                    }
+                }
             }
+            String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
+            return resultado;
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -68,32 +107,8 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        return null;//resultados.toArray(new String[0]);
+        return null;
     }
-
-    
-    public void mudarInfoTexto() {
-        String BaseDadosString[] = LerBaseDados();
-        if(BaseDadosString != null){
-            String quantidadeBilhetes = BaseDadosString[2];
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + linhaSelecionada + quantidadeBilhetes + ".png";
-            ImageIcon icon = new ImageIcon(filePath);
-            QrCode.setIcon(icon);
-            QrCode.revalidate();
-            QrCode.repaint();
-            
-            TextoCaminho.setText("\nQuantidade: " + quantidadeBilhetes);
-        } else {
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\QrVazio.png";
-            ImageIcon icon = new ImageIcon(filePath);
-            QrCode.setIcon(icon);
-            QrCode.revalidate();
-            QrCode.repaint();
-            
-            TextoCaminho.setText("Quantidade: 0");
-        }
-    } 
     
     private int pagina = 0;
     /**
@@ -101,8 +116,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
      */
     public MenuBilhetePersonalizado() {
         initComponents();
-        //iniciarBilhete();
-        //mudarInfoTexto();
+        GerarQrCode();
         BotaoProximo.setEnabled(false);
      }
 
@@ -183,6 +197,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
             .addComponent(TUB_logo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        BotaoAnterior.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         BotaoAnterior.setText("Único");
         BotaoAnterior.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BotaoAnterior.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -196,26 +211,32 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
             }
         });
 
+        BotaoProximo.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         BotaoProximo.setText("Personalizado");
         BotaoProximo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BotaoProximo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BotaoProximoMouseClicked(evt);
+            }
+        });
         BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoProximoActionPerformed(evt);
             }
         });
 
-        TextoPercurso.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 36)); // NOI18N
+        TextoPercurso.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 34)); // NOI18N
         TextoPercurso.setForeground(new java.awt.Color(255, 255, 255));
         TextoPercurso.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        TextoPercurso.setText("Bilhetes");
+        TextoPercurso.setText("Bilhetes Personalizados");
 
-        TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 12)); // NOI18N
+        TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24)); // NOI18N
         TextoCaminho.setForeground(new java.awt.Color(255, 255, 255));
         TextoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         TextoCaminho.setText("jLabel1");
 
         QrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrCodes/QrVazio.png")));
+        QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrVazio.png")));
         QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
@@ -238,7 +259,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 .addComponent(TextoPercurso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(FundoLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addGap(42, 42, 42)
                 .addComponent(QrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -247,16 +268,16 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
             .addGroup(FundoLayout.createSequentialGroup()
                 .addComponent(Topo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(TextoPercurso, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TextoPercurso, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BotaoAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(51, 51, 51)
                 .addComponent(QrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(90, 90, 90))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -275,72 +296,11 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-        if (linhaSelecionada.equals("Azul")) {
-            TextoPercurso.setText("Bilhetes - Amarela");
-            linhaSelecionada = "Amarela";
-            
-            BotaoAnterior.setEnabled(false);
-            BotaoAnterior.setVisible(false);
-            BotaoProximo.setEnabled(true);
-            
-            BotaoProximo.setText("Linha Azul >>");
-            BotaoAnterior.setText("");
-        } else if (linhaSelecionada.equals("Verde")) {
-            TextoPercurso.setText("Bilhetes - Azul");
-            linhaSelecionada = "Azul";
-            
-            BotaoAnterior.setEnabled(true);
-            BotaoProximo.setEnabled(true);
-            
-            BotaoProximo.setText("Linha Verde >>");
-            BotaoAnterior.setText("<< Linha Amarela");
-        } else if (linhaSelecionada.equals("Vermelha")) {
-            TextoPercurso.setText("Bilhetes - Verde");
-            linhaSelecionada = "Verde";
-            
-            BotaoAnterior.setEnabled(true);
-            BotaoProximo.setEnabled(true);
-            BotaoProximo.setVisible(true);
-            
-            BotaoProximo.setText("Linha Vermelha >>");
-            BotaoAnterior.setText("<< Linha Azul");
-        }
-        mudarInfoTexto();
+
     }//GEN-LAST:event_BotaoAnteriorActionPerformed
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        if (linhaSelecionada.equals("Amarela")) {
-            TextoPercurso.setText("Bilhetes - Azul");
-            linhaSelecionada = "Azul";
-            
-            BotaoAnterior.setEnabled(true);
-            BotaoAnterior.setVisible(true);
-            BotaoProximo.setEnabled(true);
-            
-            BotaoProximo.setText("Linha Verde >>");
-            BotaoAnterior.setText("<< Linha Amarela");
-        } else if (linhaSelecionada.equals("Azul")) {
-            TextoPercurso.setText("Bilhetes - Verde");
-            linhaSelecionada = "Verde";
-            
-            BotaoAnterior.setEnabled(true);
-            BotaoProximo.setEnabled(true);
-            BotaoProximo.setVisible(true);
-            
-            BotaoProximo.setText("Linha Vermelha >>");
-            BotaoAnterior.setText("<< Linha Azul");
-        } else if (linhaSelecionada.equals("Verde")) {
-            TextoPercurso.setText("Bilhetes - Vermelha");
-            linhaSelecionada = "Vermelha";
-            
-            BotaoAnterior.setEnabled(true);
-            BotaoProximo.setEnabled(false);
-            BotaoProximo.setVisible(false);
-            
-            BotaoProximo.setText("");
-            BotaoAnterior.setText("<< Linha Verde");
-        }
-        mudarInfoTexto();
+        
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
     private void BotaoVoltarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoVoltarMouseClicked
@@ -348,6 +308,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         MenuBRT Voltar = new MenuBRT();
         Voltar.setVisible(true);
     }//GEN-LAST:event_BotaoVoltarMouseClicked
+
+    private void BotaoProximoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoMouseClicked
+        
+    }//GEN-LAST:event_BotaoProximoMouseClicked
 
     private void BotaoAnteriorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorMouseClicked
         dispose();

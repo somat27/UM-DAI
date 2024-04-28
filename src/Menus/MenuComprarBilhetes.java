@@ -16,6 +16,11 @@ import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import java.io.*;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,51 +39,54 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     float valor = 0.0f;
     
     public void EditarBaseDados(String corSelecionada, String quantidadeSelecionadaStr, String tipoBilhete) {
-        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\Bilhetes.txt";
-        
+        java.sql.Connection con = null;
+        PreparedStatement updateStatement = null;
+        PreparedStatement insertStatement = null;
+        ResultSet rs = null;
+
         try {
-            List<String> linhas = new ArrayList<>();
-            
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            String linhaAtual;
-            while((linhaAtual = reader.readLine()) != null) {
-                linhas.add(linhaAtual);
-            }
-            reader.close();
-            
-            boolean linhaEncontrada = false;
-            for(int i = 0; i < linhas.size(); i++){
-                String[] partes = linhas.get(i).split(",");
-                if(partes[1].equals(corSelecionada) && partes[3].equals(tipoBilhete)) {
-                    linhaEncontrada = true;
-                    int valorAtual = Integer.parseInt(partes[2]);
-                    int novoValorInt = Integer.parseInt(quantidadeSelecionadaStr);
-                    int novoValorTotal = valorAtual+novoValorInt;
-                    partes[2] = Integer.toString(novoValorTotal);
-                    linhas.set(i, String.join(",", partes));
-                    break;
-                }
-            }
-            
-            if(linhaEncontrada){
-                BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-                for(String linha : linhas) {
-                    writer.write(linha);
-                    writer.newLine();
-                }
-                writer.close();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
+
+            // Check if the record already exists
+            String selectQuery = "SELECT * FROM Bilhetes WHERE Linha = ? AND Tipo_Bilhete = ?";
+            updateStatement = con.prepareStatement(selectQuery);
+            updateStatement.setString(1, corSelecionada);
+            updateStatement.setString(2, tipoBilhete);
+            rs = updateStatement.executeQuery();
+
+            if (rs.next()) {
+                // If record exists, update it
+                int valorAtual = rs.getInt("Quantidade_Bilhetes");
+                int novoValorInt = Integer.parseInt(quantidadeSelecionadaStr);
+                int novoValorTotal = valorAtual + novoValorInt;
+
+                String updateQuery = "UPDATE Bilhetes SET Quantidade_Bilhetes = ? WHERE Linha = ? AND Tipo_Bilhete = ?";
+                updateStatement = con.prepareStatement(updateQuery);
+                updateStatement.setInt(1, novoValorTotal);
+                updateStatement.setString(2, corSelecionada);
+                updateStatement.setString(3, tipoBilhete);
+                updateStatement.executeUpdate();
             } else {
-                try {
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
-                    writer.write("1,"+corSelecionada+","+quantidadeSelecionadaStr+","+tipoBilhete);
-                    writer.newLine();
-                    writer.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(MenuComprarBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                // If record doesn't exist, insert it
+                String insertQuery = "INSERT INTO Bilhetes (Linha, Quantidade_Bilhetes, Tipo_Bilhete) VALUES (?, ?, ?)";
+                insertStatement = con.prepareStatement(insertQuery);
+                insertStatement.setString(1, corSelecionada);
+                insertStatement.setInt(2, Integer.parseInt(quantidadeSelecionadaStr));
+                insertStatement.setString(3, tipoBilhete);
+                insertStatement.executeUpdate();
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MenuComprarBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (updateStatement != null) updateStatement.close();
+                if (insertStatement != null) insertStatement.close();
+                if (con != null) con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -104,42 +112,6 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         }
         return null;
     }
-    
-    public void GerarQrCode(String corSelecionada, String quantidadeBilhetes, String tipoBilhete) {
-        String QrCodeData = null;
-        String quantidadeBilhetesString = "0";
-        String quantidadeBilhetesAntigo = "0";
-        String BaseDadosString[] = LerBaseDados(corSelecionada);
-        if(BaseDadosString != null){
-            String linhaString = BaseDadosString[1];
-            quantidadeBilhetesString = BaseDadosString[2];
-            int novaCompra = Integer.parseInt(quantidadeBilhetes);
-            int valorAtual = Integer.parseInt(quantidadeBilhetesString);
-            int novoValorTotal = valorAtual-novaCompra;
-            quantidadeBilhetesAntigo = Integer.toString(novoValorTotal);
-            String tipoBilheteString = BaseDadosString[3];
-            QrCodeData = "Linha: " + linhaString + "\nTipo Bilhete: "+ tipoBilheteString + "\nQuantidade: " + quantidadeBilhetesString;
-        }
-        
-        try {
-            //String QrCodeData = "Linha: " + corSelecionada + "\nTipo Bilhete: "+ tipoBilhete+ "\nQuantidade: " + quantidadeBilhetes;
-            String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + corSelecionada + quantidadeBilhetesString + ".png";
-            String filePath2 = System.getProperty("user.dir")+ "\\src\\Assets\\QrCodes\\Qr-" + corSelecionada + quantidadeBilhetesAntigo + ".png";
-            File Antigo = new File(filePath2);
-            Antigo.delete();
-            String charset = "UTF-8";
-            
-            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
-                    BarcodeFormat.QR_CODE,350,350,hintMap);
-
-            MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-    
     
     /**
 
@@ -719,7 +691,6 @@ ButtonGroup buttonGroup = new ButtonGroup();
         }
         // Guardar Base de Dados  
         EditarBaseDados(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
-        GerarQrCode(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
         
     }//GEN-LAST:event_ContinuarActionPerformed
 
