@@ -5,6 +5,7 @@
 package Menus;
 
 import javax.swing.ButtonGroup;
+import java.sql.Connection;
 
 /**
  *
@@ -518,19 +519,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
-ButtonGroup buttonGroup = new ButtonGroup();
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    ButtonGroup buttonGroup = new ButtonGroup();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuPrincipal().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel TUB_logo;

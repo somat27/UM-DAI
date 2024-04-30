@@ -9,8 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
-import java.io.*;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
@@ -23,23 +22,23 @@ import java.util.logging.Logger;
  * @author tomas
  */
 public class MenuComprarBilhetes extends javax.swing.JFrame {
+
+    private final Connection con;
     float valor = 0.0f;
     
-    public void EditarBaseDados(String corSelecionada, String quantidadeSelecionadaStr, String tipoBilhete) {
-        java.sql.Connection con = null;
+    public void ComprarBilheteUnico(String corSelecionada, String quantidadeSelecionadaStr, String tipoBilhete) {
         PreparedStatement updateStatement = null;
         PreparedStatement insertStatement = null;
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
+            //Class.forName("com.mysql.cj.jdbc.Driver");
+            //con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
 
             // Check if the record already exists
-            String selectQuery = "SELECT * FROM Bilhetes WHERE Linha = ? AND Tipo_Bilhete = ?";
+            String selectQuery = "SELECT * FROM BilhetesUnicos WHERE Linha = ?";
             updateStatement = con.prepareStatement(selectQuery);
             updateStatement.setString(1, corSelecionada);
-            updateStatement.setString(2, tipoBilhete);
             rs = updateStatement.executeQuery();
 
             if (rs.next()) {
@@ -48,64 +47,39 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 int novoValorInt = Integer.parseInt(quantidadeSelecionadaStr);
                 int novoValorTotal = valorAtual + novoValorInt;
 
-                String updateQuery = "UPDATE Bilhetes SET Quantidade_Bilhetes = ? WHERE Linha = ? AND Tipo_Bilhete = ?";
+                String updateQuery = "UPDATE BilhetesUnicos SET Quantidade_Bilhetes = ? WHERE Linha = ?";
                 updateStatement = con.prepareStatement(updateQuery);
                 updateStatement.setInt(1, novoValorTotal);
                 updateStatement.setString(2, corSelecionada);
-                updateStatement.setString(3, tipoBilhete);
                 updateStatement.executeUpdate();
             } else {
                 // If record doesn't exist, insert it
-                String insertQuery = "INSERT INTO Bilhetes (Linha, Quantidade_Bilhetes, Tipo_Bilhete) VALUES (?, ?, ?)";
+                String insertQuery = "INSERT INTO BilhetesUnicos (Linha, Quantidade_Bilhetes) VALUES (?, ?)";
                 insertStatement = con.prepareStatement(insertQuery);
                 insertStatement.setString(1, corSelecionada);
                 insertStatement.setInt(2, Integer.parseInt(quantidadeSelecionadaStr));
-                insertStatement.setString(3, tipoBilhete);
                 insertStatement.executeUpdate();
             }
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (updateStatement != null) updateStatement.close();
                 if (insertStatement != null) insertStatement.close();
-                if (con != null) con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
-    public String[] LerBaseDados(String corSelecionada) {
-        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\Bilhetes.txt";
-        File file = new File(filePath);
-        
-        try {            
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            
-            Object[] lines = br.lines().toArray();
-            
-            for(int i = 0; i < lines.length; i++){
-                String[] row = lines[i].toString().split(",");
-                if (row[1].equals(corSelecionada)){
-                    return row;
-                }
-            }
-            
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-        }
-        return null;
-    }
-    
     /**
 
      * Creates new form Login_Application
      */
-    public MenuComprarBilhetes() {
+    public MenuComprarBilhetes(Connection con) {
         initComponents();
+        this.con = con;
         
         TipoDeBilhete.removeAllItems();
         TipoDeBilhete.addItem("Único");
@@ -677,7 +651,7 @@ ButtonGroup buttonGroup = new ButtonGroup();
 
         }
         // Guardar Base de Dados  
-        EditarBaseDados(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
+        ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
         
     }//GEN-LAST:event_ContinuarActionPerformed
 
@@ -687,18 +661,6 @@ ButtonGroup buttonGroup = new ButtonGroup();
         Voltar.setVisible(true);
     }//GEN-LAST:event_jLabel4MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run(){
-                new MenuComprarBilhetes().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton Cartao;

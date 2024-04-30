@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.sql.Connection;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,11 +18,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MenuLinhas extends javax.swing.JFrame {
 
+    private final Connection con;
+
     /**
      * Creates new form Login_Application
      */
-    public MenuLinhas() {
+    public MenuLinhas(Connection con) {
         initComponents();
+        this.con = con;
+        
         CorLinha.removeAllItems();
         CorLinha.addItem("Amarela");
         CorLinha.addItem("Azul");
@@ -346,18 +351,6 @@ public class MenuLinhas extends javax.swing.JFrame {
         Voltar.setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuLinhas().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoConfirmarLinhas;

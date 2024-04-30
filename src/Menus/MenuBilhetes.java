@@ -11,6 +11,7 @@ import com.google.zxing.common.BitMatrix;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,12 +29,15 @@ import java.awt.image.BufferedImage;
  * @author tomas
  */
 public class MenuBilhetes extends javax.swing.JFrame {
+
+    private final Connection con;
+    
     public void GerarQrCode() {
         String QrCodeData = LerBaseDados();
-        
+
         try {
             String charset = "UTF-8";
-            
+
             Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
             hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
@@ -63,15 +67,12 @@ public class MenuBilhetes extends javax.swing.JFrame {
     }
     
     public String LerBaseDados() {        
-        java.sql.Connection con = null;
         Statement st = null;
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
             st = con.createStatement();
-            rs = st.executeQuery("SELECT * FROM Bilhetes");
+            rs = st.executeQuery("SELECT * FROM BilhetesUnicos");
             int quantidadeAmarela = 0;
             int quantidadeVerde = 0;
             int quantidadeAzul = 0;
@@ -80,29 +81,25 @@ public class MenuBilhetes extends javax.swing.JFrame {
             while (rs.next()) {
                 String linha = rs.getString("Linha");
                 String quantidade = rs.getString("Quantidade_Bilhetes");
-                String tipo = rs.getString("Tipo_Bilhete");
                 
-                if(tipo.equals("Único")){
-                    if(linha.equals("Amarela")){
-                        quantidadeAmarela = Integer.parseInt(quantidade);
-                    }else if(linha.equals("Verde")){
-                        quantidadeVerde = Integer.parseInt(quantidade);;
-                    }else if(linha.equals("Azul")){
-                        quantidadeAzul = Integer.parseInt(quantidade);;
-                    }else if(linha.equals("Vermelha")){
-                        quantidadeVermelha = Integer.parseInt(quantidade);;
-                    }
+                if(linha.equals("Amarela")){
+                    quantidadeAmarela = Integer.parseInt(quantidade);
+                }else if(linha.equals("Verde")){
+                    quantidadeVerde = Integer.parseInt(quantidade);;
+                }else if(linha.equals("Azul")){
+                    quantidadeAzul = Integer.parseInt(quantidade);;
+                }else if(linha.equals("Vermelha")){
+                    quantidadeVermelha = Integer.parseInt(quantidade);;
                 }
             }
             String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
             return resultado;
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
-                if (con != null) con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -114,8 +111,9 @@ public class MenuBilhetes extends javax.swing.JFrame {
     /**
      * Creates new form Login_Application
      */
-    public MenuBilhetes() {
+    public MenuBilhetes(Connection con) {
         initComponents();
+        this.con = con;
         GerarQrCode();
         BotaoAnterior.setEnabled(false);
      }
@@ -306,22 +304,10 @@ public class MenuBilhetes extends javax.swing.JFrame {
 
     private void BotaoProximoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoMouseClicked
         dispose();
-        MenuBilhetePersonalizado Menu = new MenuBilhetePersonalizado();
+        MenuBilhetePersonalizado Menu = new MenuBilhetePersonalizado(con);
         Menu.setVisible(true);
     }//GEN-LAST:event_BotaoProximoMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuBilhetes().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoAnterior;

@@ -20,6 +20,7 @@ import java.util.Map;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
 
 
 
@@ -28,6 +29,9 @@ import java.awt.image.BufferedImage;
  * @author tomas
  */
 public class MenuBilhetePersonalizado extends javax.swing.JFrame {
+
+    private final Connection con;
+    
     public void GerarQrCode() {
         String QrCodeData = LerBaseDados();
         
@@ -68,10 +72,8 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         ResultSet rs = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
             st = con.createStatement();
-            rs = st.executeQuery("SELECT * FROM Bilhetes");
+            rs = st.executeQuery("SELECT * FROM BilhetesPersonalizados");
             int quantidadeAmarela = 0;
             int quantidadeVerde = 0;
             int quantidadeAzul = 0;
@@ -96,13 +98,12 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
             }
             String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
             return resultado;
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) rs.close();
                 if (st != null) st.close();
-                if (con != null) con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -114,9 +115,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     /**
      * Creates new form Login_Application
      */
-    public MenuBilhetePersonalizado() {
+    public MenuBilhetePersonalizado(Connection con) {
         initComponents();
-        GerarQrCode();
+        this.con = con;
+        //GerarQrCode();
         BotaoProximo.setEnabled(false);
      }
 
@@ -315,22 +317,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
 
     private void BotaoAnteriorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorMouseClicked
         dispose();
-        MenuBilhetes Menu = new MenuBilhetes();
+        MenuBilhetes Menu = new MenuBilhetes(con);
         Menu.setVisible(true);
     }//GEN-LAST:event_BotaoAnteriorMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuBilhetePersonalizado().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoAnterior;

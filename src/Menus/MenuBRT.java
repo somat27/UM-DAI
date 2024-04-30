@@ -5,6 +5,9 @@
 package Menus;
 
 import Menus.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -12,11 +15,26 @@ import Menus.*;
  */
 public class MenuBRT extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login_Application
-     */
+    private Connection con = null;
+
+    public void showTime(Runnable function) {
+        long startTime = System.currentTimeMillis();
+        function.run();
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        System.out.println("Tempo de execução: " + duration + " milissegundos");
+    }    
+    
     public MenuBRT() {
         initComponents();
+        showTime(() -> {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
+            } catch (ClassNotFoundException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -176,34 +194,21 @@ public class MenuBRT extends javax.swing.JFrame {
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
         dispose();
-        MenuComprarBilhetes Menu = new MenuComprarBilhetes(); 
+        MenuComprarBilhetes Menu = new MenuComprarBilhetes(con); 
         Menu.setVisible(true);
     }//GEN-LAST:event_jLabel4MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
         dispose();
-        MenuBilhetes Menu = new MenuBilhetes(); 
+        MenuBilhetes Menu = new MenuBilhetes(con); 
         Menu.setVisible(true);
     }//GEN-LAST:event_jLabel5MouseClicked
 
     private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
         dispose();
-        MenuLinhas Menu = new MenuLinhas(); 
+        MenuLinhas Menu = new MenuLinhas(con); 
         Menu.setVisible(true);
     }//GEN-LAST:event_jLabel6MouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuBRT().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BotaoVoltar;
