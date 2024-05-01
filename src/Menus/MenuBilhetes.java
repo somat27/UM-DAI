@@ -69,40 +69,23 @@ public class MenuBilhetes extends javax.swing.JFrame {
     public String LerBaseDados() {        
         Statement st = null;
         ResultSet rs = null;
+        String resultado = "";
 
         try {
             st = con.createStatement();
             rs = st.executeQuery("SELECT * FROM BilhetesUnicos");
-            int quantidadeAmarela = 0;
-            int quantidadeVerde = 0;
-            int quantidadeAzul = 0;
-            int quantidadeVermelha = 0;
 
             while (rs.next()) {
                 String linha = rs.getString("Linha");
-                String quantidade = rs.getString("Quantidade_Bilhetes");
+                int quantidade = rs.getInt("Quantidade_Bilhetes");
                 
-                if(linha.equals("Amarela")){
-                    quantidadeAmarela = Integer.parseInt(quantidade);
-                }else if(linha.equals("Verde")){
-                    quantidadeVerde = Integer.parseInt(quantidade);;
-                }else if(linha.equals("Azul")){
-                    quantidadeAzul = Integer.parseInt(quantidade);;
-                }else if(linha.equals("Vermelha")){
-                    quantidadeVermelha = Integer.parseInt(quantidade);;
-                }
+                if(quantidade>0)
+                    resultado = resultado + quantidade + " - " + linha + "\n";
             }
-            String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
+            //String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
             return resultado;
         } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (st != null) st.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return null;
     }
@@ -226,7 +209,7 @@ public class MenuBilhetes extends javax.swing.JFrame {
         TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24)); // NOI18N
         TextoCaminho.setForeground(new java.awt.Color(255, 255, 255));
         TextoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        TextoCaminho.setText("jLabel1");
+        TextoCaminho.setText("Sem Bilhetes");
 
         QrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrVazio.png")));

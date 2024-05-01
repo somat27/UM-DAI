@@ -4,8 +4,8 @@
  */
 package Menus;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import Main.Dijkstra;
+import Main.Node;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -13,8 +13,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -25,6 +32,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
 
     private final Connection con;
     float valor = 0.0f;
+    Map<String, Node<String>> nodesMap = new HashMap<>();
+    Dijkstra<String> dijkstra = new Dijkstra<>();
     
     public void ComprarBilheteUnico(String corSelecionada, String quantidadeSelecionadaStr, String tipoBilhete) {
         PreparedStatement updateStatement = null;
@@ -32,10 +41,6 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         ResultSet rs = null;
 
         try {
-            //Class.forName("com.mysql.cj.jdbc.Driver");
-            //con = DriverManager.getConnection("jdbc:mysql://sql11.freesqldatabase.com:3306/sql11702206", "sql11702206", "95uBqxnYKt");
-
-            // Check if the record already exists
             String selectQuery = "SELECT * FROM BilhetesUnicos WHERE Linha = ?";
             updateStatement = con.prepareStatement(selectQuery);
             updateStatement.setString(1, corSelecionada);
@@ -83,91 +88,59 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         
         TipoDeBilhete.removeAllItems();
         TipoDeBilhete.addItem("Único");
-        TipoDeBilhete.addItem("Personalizado (não implementado)");
+        TipoDeBilhete.addItem("Personalizado");
         TipoDeBilhete.setSelectedItem(null); 
-        /*TipoDeBilhete.setSelectedItem(null);
-    
-        if(TipoDeBilhete.equals("Único")){
-        CorLinha.setVisible(true);
-        Quantidade.setVisible(true);
-        Painel.setVisible(true);
-        }*/
         
-        CorLinha.removeAllItems();
-        
-        CorLinha.addItem("Amarela");
-        CorLinha.addItem("Azul");
-        CorLinha.addItem("Verde");
-        CorLinha.addItem("Vermelha");
-        CorLinha.setSelectedItem(null); 
+        CorLinha.setVisible(false);
+        TextoCorLinha.setVisible(false);
+        Quantidade.setVisible(false);
+        TextoQuantidade.setVisible(false);
+        Painel.setVisible(false);
+    }
 
-        Quantidade.removeAllItems();
-         /*73 verde 74 vermelho 75 amarela 76 azul*/
-        Quantidade.addItem("1");
-        Quantidade.addItem("3");
-        Quantidade.addItem("5");
-        Quantidade.addItem("10");
-        Quantidade.setSelectedItem(null);  
-        
+    private void atualizarValorTotal() { 
+        String corSelecionada = (String) CorLinha.getSelectedItem();
+        String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();   
+        float valor = 0;
 
-        CorLinha.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            atualizarValorTotal();
-        }
-        });
+        if(TipoDeBilhete.getSelectedIndex() == 0){
+            // Verifica se a quantidade selecionada é null
+            if (quantidadeSelecionadaStr != null) {
+                int quantidadeSelecionada = Integer.parseInt(quantidadeSelecionadaStr);
 
-        Quantidade.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                atualizarValorTotal();
+
+                Statement st = null;
+                ResultSet rs = null;
+                try {
+                    st = con.createStatement();
+                    rs = st.executeQuery("SELECT * FROM TipoBilhetes");
+
+                    while (rs.next()) {
+                        String linha = rs.getString("Linha");
+                        float preco = rs.getFloat("Preco");
+
+                        if(corSelecionada!=null && corSelecionada.equals(linha))
+                            valor = preco;
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        if (rs != null) rs.close();
+                        if (st != null) st.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                valor = valor * quantidadeSelecionada;
+
+                Preco.setText(String.valueOf(valor));
             }
-        });
-        
-        atualizarValorTotal();
-
-        Continuar.setEnabled(false);
-
-        
-    }
-
-    private void atualizarValorTotal() {
-    String corSelecionada = (String) CorLinha.getSelectedItem();
-    String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
-
-    // Verifica se a quantidade selecionada é null
-    if (quantidadeSelecionadaStr != null) {
-        int quantidadeSelecionada = Integer.parseInt(quantidadeSelecionadaStr);
-
-
-        switch (corSelecionada) {
-            case "Amarela":
-                valor = 0.75f;
-                break;
-            case "Azul":
-                valor = 0.76f;
-                break;
-            case "Verde":
-                valor = 0.73f; 
-                break;
-            case "Vermelha":
-                valor = 0.74f; 
-                break;
-            default:
-                valor = 0.0f;
-                break;
+        }else{
+            
         }
-
-        valor = valor * quantidadeSelecionada;
-
-        Preco.setText(String.valueOf(valor));
-    } else {
-        // Lidar com o caso em que nenhum item foi selecionado na quantidade
-        Preco.setText("0.00");
     }
- 
-    
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -198,8 +171,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         Continuar = new javax.swing.JButton();
         Preco = new javax.swing.JLabel();
         javax.swing.JLabel TextoTipoBilhete = new javax.swing.JLabel();
-        javax.swing.JLabel TextoCorLinha = new javax.swing.JLabel();
-        javax.swing.JLabel TextoQuantidade = new javax.swing.JLabel();
+        TextoCorLinha = new javax.swing.JLabel();
+        TextoQuantidade = new javax.swing.JLabel();
 
         jScrollPane1.setViewportView(jEditorPane1);
 
@@ -349,7 +322,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             }
         });
 
-        Preco.setText("jLabel5");
+        Preco.setText("0.00");
 
         javax.swing.GroupLayout PainelLayout = new javax.swing.GroupLayout(Painel);
         Painel.setLayout(PainelLayout);
@@ -467,56 +440,196 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-ButtonGroup buttonGroup = new ButtonGroup();
+    ButtonGroup buttonGroup = new ButtonGroup();
     private void CartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CartaoActionPerformed
-
-
         buttonGroup.add(Cartao);
-        // Agora os botões de opção estão agrupados
         Cartao.setVisible(true);
-                Continuar.setEnabled(true);
-
-        // Dispose da janela atual
     }//GEN-LAST:event_CartaoActionPerformed
 
     private void MultibancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MultibancoActionPerformed
         buttonGroup.add(Multibanco);
-// TODO add your handling code here:
         Multibanco.setVisible(true);
-        Continuar.setEnabled(true);
-
     }//GEN-LAST:event_MultibancoActionPerformed
     
     private void MBWayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MBWayActionPerformed
-        // TODO add your handling code here:
         buttonGroup.add(MBWay);
-        
         MBWay.setVisible(true);
-        Continuar.setEnabled(true);
-
-
-        
     }//GEN-LAST:event_MBWayActionPerformed
 
     private void TipoDeBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDeBilheteActionPerformed
+        if(TipoDeBilhete.getSelectedIndex() == 0){
+            TextoCorLinha.setText("Cor da Linha");
+            TextoQuantidade.setText("Quantidade Bilhetes");
+            CorLinha.setVisible(true);
+            TextoCorLinha.setVisible(true);
+            Quantidade.setVisible(true);
+            TextoQuantidade.setVisible(true);
+            Painel.setVisible(true);
+            
+            
+            CorLinha.removeAllItems();
+            Statement st = null;
+            ResultSet rs = null;
+            try {
+                st = con.createStatement();
+                rs = st.executeQuery("SELECT * FROM TipoBilhetes");
 
+                while (rs.next()) {
+                    String linha = rs.getString("Linha");
+
+                    CorLinha.addItem(linha);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (rs != null) rs.close();
+                    if (st != null) st.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            CorLinha.setSelectedItem(null); 
+
+            Quantidade.removeAllItems();
+            Quantidade.addItem("1");
+            Quantidade.addItem("3");
+            Quantidade.addItem("5");
+            Quantidade.addItem("10");
+            Quantidade.setSelectedItem(null); 
+            atualizarValorTotal();
+        }else if(TipoDeBilhete.getSelectedIndex() == 1){
+            TextoCorLinha.setText("Paragem Inicial");
+            TextoQuantidade.setText("Paragem Final");
+            CorLinha.setVisible(true);
+            TextoCorLinha.setVisible(true);
+            Quantidade.setVisible(true);
+            TextoQuantidade.setVisible(true);
+            Painel.setVisible(true);   
+            CorLinha.removeAllItems();
+            Quantidade.removeAllItems();
+            
+            try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
+
+               Set<String> paragensAdicionadas = new HashSet<>();
+
+                while (rs.next()) {
+                    String estacao = rs.getString("Estacao");
+                    if (!paragensAdicionadas.contains(estacao)) {
+                        CorLinha.addItem(estacao);
+                        Quantidade.addItem(estacao);
+                        paragensAdicionadas.add(estacao);
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_TipoDeBilheteActionPerformed
 
     private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
-        // TODO add your handling code here:
+        if(TipoDeBilhete.getSelectedIndex() == 0){
+            atualizarValorTotal();
+        } else if(TipoDeBilhete.getSelectedIndex() == 1){
+            String corSelecionada = (String) CorLinha.getSelectedItem();
+            String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+            if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
+                try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
+
+                    ResultSet rs2 = st.executeQuery("SELECT Nome, Distancia, Proximo FROM Paragens");
+                    while (rs2.next()) {
+                        String nodeName = rs2.getString("Nome");
+                        Node<String> node = new Node<>(nodeName);
+                        nodesMap.put(nodeName, node);                    
+                    }
+                    rs2.beforeFirst();
+                    while(rs2.next()){
+                        String nodeName = rs2.getString("Nome");
+                        Node<String> node = nodesMap.get(nodeName);
+                        String adjacentNodeName = rs2.getString("Proximo");
+                        int distancia = rs2.getInt("Distancia");
+                        Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
+                        node.addAdjacentNode(adjacentNode, distancia);
+                    }
+
+                    /*for(Node<String> node : nodesMap.values()) {
+                        System.out.println("Paragem: " + node.getData());
+                        System.out.println(" - Proximas:");
+                        for (Map.Entry<Node<String>, Integer> entry : node.getAdjacentNodes().entrySet()) {
+                            Node<String> adjacentNode = entry.getKey();
+                            int weight = entry.getValue();
+                            System.out.println("  - "+adjacentNode.getData()+" (Distancia: "+weight+")");
+                        }
+                    }*/
+
+                    dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
+                    dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    nodesMap.clear();
+
+                    //Calcular preço da viagem
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }//GEN-LAST:event_CorLinhaActionPerformed
 
     private void QuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuantidadeActionPerformed
-        // TODO add your handling code here:
+        if(TipoDeBilhete.getSelectedIndex() == 0){
+            atualizarValorTotal();
+        } else if(TipoDeBilhete.getSelectedIndex() == 1){
+            String corSelecionada = (String) CorLinha.getSelectedItem();
+            String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+            if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
+                try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
+
+                    ResultSet rs2 = st.executeQuery("SELECT Nome, Distancia, Proximo FROM Paragens");
+                    while (rs2.next()) {
+                        String nodeName = rs2.getString("Nome");
+                        Node<String> node = new Node<>(nodeName);
+                        nodesMap.put(nodeName, node);                    
+                    }
+                    rs2.beforeFirst();
+                    while(rs2.next()){
+                        String nodeName = rs2.getString("Nome");
+                        Node<String> node = nodesMap.get(nodeName);
+                        String adjacentNodeName = rs2.getString("Proximo");
+                        int distancia = rs2.getInt("Distancia");
+                        Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
+                        node.addAdjacentNode(adjacentNode, distancia);
+                    }
+
+                    /*for(Node<String> node : nodesMap.values()) {
+                        System.out.println("Paragem: " + node.getData());
+                        System.out.println(" - Proximas:");
+                        for (Map.Entry<Node<String>, Integer> entry : node.getAdjacentNodes().entrySet()) {
+                            Node<String> adjacentNode = entry.getKey();
+                            int weight = entry.getValue();
+                            System.out.println("  - "+adjacentNode.getData()+" (Distancia: "+weight+")");
+                        }
+                    }*/
+
+                    dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
+                    dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    nodesMap.clear();
+
+                    //Calcular preço da viagem
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }//GEN-LAST:event_QuantidadeActionPerformed
 
     private boolean SotemDigito(String numero){
-    for (char a : numero.toCharArray()) {
-        if (!(a >= '0' && a <= '9')) {
-            return false;
+        for (char a : numero.toCharArray()) {
+            if (!(a >= '0' && a <= '9')) {
+                return false;
+            }
         }
-    }
-    return true; 
+        return true; 
     }
     
     private boolean FormatoMesAno(String MesAno){
@@ -569,90 +682,99 @@ ButtonGroup buttonGroup = new ButtonGroup();
         String numeroCartao = null;
         String dataValidade = null;
         String cvc2 = null;
+        Boolean pagou = false;
         
         String corSelecionada = (String) CorLinha.getSelectedItem();
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
         String tipoBilhete = (String) TipoDeBilhete.getSelectedItem();
         
-        if (Multibanco.isSelected()) {
-            Random random = new Random();
-            long randomN = random.nextInt(100000001);
-            String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
-            JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
-        }else if(MBWay.isSelected()){
-            while(count != 2){
-            String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
-            if(input.length()!= 9){
-            JOptionPane.showMessageDialog(null, "O número de telémovel deve ter 9 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-            continue;
-            } else {
-                count++;
-            }
-            if(SotemDigito(input)){
-            count++;
-            } else {
-            JOptionPane.showMessageDialog(null, "O número de telémovel deve conter só digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-            if(count == 2){
-                break;
-            } else {
-                count = 0 ;
-            }
-        }
-        }else if(Cartao.isSelected()){
-            while(count2 != 2){
-                numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
-                if(numeroCartao.length()!= 16){
-                JOptionPane.showMessageDialog(null, "O número do cartão de crédito deve ter 16 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-                continue;
-            } else {
-                count2++;
-            }
-            if(SotemDigito(numeroCartao)){
-                count2++;
-            } else {
-                JOptionPane.showMessageDialog(null, "O número do cartão deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-            if(count2 == 2){
-                break;
-            } else {
-                count2 = 0 ;
-            }
-        }
-            while(true){
-                dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
-                if(FormatoMesAno(dataValidade)){
-                    break;
+        if (corSelecionada != null && quantidadeSelecionadaStr != null && tipoBilhete != null){
+            if (Multibanco.isSelected()) {
+                Random random = new Random();
+                long randomN = random.nextInt(100000001);
+                String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
+                JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
+                pagou = true;
+            }else if(MBWay.isSelected()){
+                while(count != 2){
+                    String input = JOptionPane.showInputDialog(null, "Insira o seu contacto:");
+                    if(input.length()!= 9){
+                        JOptionPane.showMessageDialog(null, "O número de telémovel deve ter 9 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    } else {
+                        count++;
+                    }
+                    if(SotemDigito(input)){
+                        count++;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "O número de telémovel deve conter só digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if(count == 2){
+                        break;
+                    } else {
+                        count = 0 ;
+                    }
                 }
-                
-            }
-            while(count4 != 2){
-                cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
-                if(cvc2.length()!=3){
-                    JOptionPane.showMessageDialog(null, "O código CVC2 deve conter 3 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-                    continue;
-                } else{
-                    count4++;
+                pagou = true;
+            }else if(Cartao.isSelected()){
+                while(count2 != 2){
+                    numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
+                    if(numeroCartao.length()!= 16){
+                        JOptionPane.showMessageDialog(null, "O número do cartão de crédito deve ter 16 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    } else {
+                        count2++;
+                    }
+                    if(SotemDigito(numeroCartao)){
+                        count2++;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "O número do cartão deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if(count2 == 2){
+                        break;
+                    } else {
+                        count2 = 0 ;
+                    }
                 }
-                if(SotemDigito(cvc2)){
-                    count4++;
-                } else{
-                    JOptionPane.showMessageDialog(null, "O código CVC2 deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-                if(count4 == 2){
-                    break;
-                } else{
-                    count4 = 0;
-                }
-            }
-            
-            String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
-            JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+                while(true){
+                    dataValidade = JOptionPane.showInputDialog(null, "Digite a data de validade (MM/YY):");
+                    if(FormatoMesAno(dataValidade)){
+                        break;
+                    }
 
+                }
+                while(count4 != 2){
+                    cvc2 = JOptionPane.showInputDialog(null, "Digite o código CVC2 (3 dígitos):");
+                    if(cvc2.length()!=3){
+                        JOptionPane.showMessageDialog(null, "O código CVC2 deve conter 3 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        continue;
+                    } else{
+                        count4++;
+                    }
+                    if(SotemDigito(cvc2)){
+                        count4++;
+                    } else{
+                        JOptionPane.showMessageDialog(null, "O código CVC2 deve conter apenas digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if(count4 == 2){
+                        break;
+                    } else{
+                        count4 = 0;
+                    }
+                }
+
+                String mensagem = String.format("Número do cartão: %s\nData de validade: %s\nCódigo CVC2: %s", numeroCartao, dataValidade, cvc2);
+                JOptionPane.showMessageDialog(null, mensagem, "Dados do Cartão de Crédito", JOptionPane.INFORMATION_MESSAGE);
+                pagou = true;
+            }
+            if(pagou){
+                if(TipoDeBilhete.getSelectedIndex() == 0){
+                    ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
+                } else if(TipoDeBilhete.getSelectedIndex() == 1){
+                    //Guardar na base de dados
+                }
+            }
         }
-        // Guardar Base de Dados  
-        ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
-        
     }//GEN-LAST:event_ContinuarActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
@@ -671,6 +793,8 @@ ButtonGroup buttonGroup = new ButtonGroup();
     private javax.swing.JPanel Painel;
     private javax.swing.JLabel Preco;
     private javax.swing.JComboBox<String> Quantidade;
+    private javax.swing.JLabel TextoCorLinha;
+    private javax.swing.JLabel TextoQuantidade;
     private javax.swing.JComboBox<String> TipoDeBilhete;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;

@@ -10,6 +10,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,11 +35,29 @@ public class MenuLinhas extends javax.swing.JFrame {
         this.con = con;
         
         CorLinha.removeAllItems();
-        CorLinha.addItem("Amarela");
-        CorLinha.addItem("Azul");
-        CorLinha.addItem("Verde");
-        CorLinha.addItem("Vermelha");
-        CorLinha.setSelectedItem(null);
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM TipoBilhetes");
+
+            while (rs.next()) {
+                String linha = rs.getString("Linha");
+                String preco = rs.getString("Preco");
+                
+                CorLinha.addItem(linha);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (st != null) st.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        CorLinha.setSelectedItem(null); 
         Sentido.removeAllItems();
         Sentido.setSelectedItem(null);
         TipoDia.removeAllItems();
@@ -268,34 +293,44 @@ public class MenuLinhas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
-        try{
-            if(CorLinha.getSelectedItem().equals("Amarela")) {
-                Sentido.removeAllItems();
-                Sentido.addItem("Estacao CP - Avenida Robert Smith");
-                Sentido.addItem("Avenida Robert Smith - Estacao CP");
-            } else if (
-                CorLinha.getSelectedItem().equals("Azul")) {
-                Sentido.removeAllItems();
-                Sentido.addItem("E.Leclerc - Este");
-                Sentido.addItem("Este - E.Leclerc");
-            } else if (
-                CorLinha.getSelectedItem().equals("Verde")) {
-                Sentido.removeAllItems();
-                Sentido.addItem("Nova Arcada - Praça Conde de Agrolongo");
-                Sentido.addItem("Praça Conde de Agrolongo - Nova Arcada");
-            } else if (
-                CorLinha.getSelectedItem().equals("Vermelha")) {
-                Sentido.removeAllItems();
-                Sentido.addItem("Estacao CP - Hospital");
-                Sentido.addItem("Hospital - Estacao CP");
+        Statement stHorarios = null;
+        Statement stBilhetes = null;
+        ResultSet horarios = null;
+        ResultSet bilhetes = null;
+        Set<String> direcoesAdicionadas = new HashSet<>();
+
+        try {
+            stHorarios = con.createStatement();
+            horarios = stHorarios.executeQuery("SELECT * FROM Horarios");
+            stBilhetes = con.createStatement();
+            bilhetes = stBilhetes.executeQuery("SELECT * FROM TipoBilhetes");
+
+            while (bilhetes.next()) {
+                String linhaBilhetes = bilhetes.getString("Linha");
+                Object selectedItem = CorLinha.getSelectedItem();
+                if (selectedItem != null && selectedItem.equals(linhaBilhetes)) {
+                    Sentido.removeAllItems();
+                    while (horarios.next()) {
+                        String linhaHorarios = horarios.getString("Linha");
+                        String direcao = horarios.getString("Direcao");
+
+                        if (linhaHorarios.equals(linhaBilhetes)) {
+                            if (!direcoesAdicionadas.contains(direcao)) {
+                                Sentido.addItem(direcao);
+                                direcoesAdicionadas.add(direcao);
+                            }
+                        }
+                    }
+                }   
             }
-            TipoDia.removeAllItems();
-            TipoDia.addItem("Dias Uteis e Sabados");
-            TipoDia.addItem("Domingos e Feriados");
-            BotaoConfirmarLinhas.setEnabled(true);
-        }catch(Exception e){
-            System.out.println(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        TipoDia.removeAllItems();
+        TipoDia.addItem("Dias Uteis e Sabados");
+        TipoDia.addItem("Domingos e Feriados");
+        BotaoConfirmarLinhas.setEnabled(true);
     }//GEN-LAST:event_CorLinhaActionPerformed
 
     private void SentidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SentidoActionPerformed
@@ -312,37 +347,32 @@ public class MenuLinhas extends javax.swing.JFrame {
 
     private void BotaoConfirmarLinhasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoConfirmarLinhasActionPerformed
         String CorLinhaString = (String)  CorLinha.getSelectedItem();
-        String SentidoString = (String)  Sentido.getSelectedItem();   
+        String SentidoString = (String)  Sentido.getSelectedItem(); 
+        DefaultTableModel model = (DefaultTableModel) TabelaHorario.getModel();
+        model.setRowCount(0);
+        DefaultTableModel tblModel = (DefaultTableModel)TabelaHorario.getModel();
         
-        String filePath = System.getProperty("user.dir")+ "\\src\\Assets\\BaseDados\\HorarioLinhas.txt";
-        File file = new File(filePath);
-        
+        Statement st = null;
+        ResultSet rs = null;
+
         try {
-            DefaultTableModel model = (DefaultTableModel) TabelaHorario.getModel();
-            model.setRowCount(0);
-            
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            
-            DefaultTableModel tblModel = (DefaultTableModel)TabelaHorario.getModel();
-            Object[] lines = br.lines().toArray();
-            
-            for(int i = 0; i < lines.length; i++){
-                String[] row = lines[i].toString().split(",");
-                String CorLinhaStringFile = row[0];
-                String SentidoStringFile = row[1];
-                String HorarioStringFile = row[2];
-                String ParagemStringFile = row[3];
-                if(CorLinhaString.equals(CorLinhaStringFile) && SentidoString.equals(SentidoStringFile)){
-                    String tbData[] = {HorarioStringFile, ParagemStringFile};
+            st = con.createStatement();
+            rs = st.executeQuery("SELECT * FROM Horarios");
+
+            while (rs.next()) {
+                String linha = rs.getString("Linha");
+                String direcao = rs.getString("Direcao");
+                String horario = rs.getString("Horario");
+                String estacao = rs.getString("Estacao");
+                
+                if(CorLinhaString.equals(linha) && SentidoString.equals(direcao)){
+                    String tbData[] = {horario, estacao};
                     tblModel.addRow(tbData);
                 }
             }
-            
-        } catch (FileNotFoundException ex) {
-            System.out.println(ex);
-        }
-        
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }//GEN-LAST:event_BotaoConfirmarLinhasActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
