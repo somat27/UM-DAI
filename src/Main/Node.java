@@ -21,13 +21,13 @@ public class Node<T> implements Comparable<Node<T>> {
     private final T name;
     private Integer distance = Integer.MAX_VALUE;
     private List<Node<T>> shortestPath = new LinkedList<>();
-    private Map<Node<T>, Integer> adjacentNodes = new HashMap<>();
+    private final Map<Node<T>, Map<String, Integer>> adjacentNodes = new HashMap<>(); // Mapeia o nó adjacente para as linhas e distâncias
 
-    public void addAdjacentNode(Node<T> node, int weight) {
-        adjacentNodes.put(node, weight);
+    public void addAdjacentNode(Node<T> node, String line, int distance) {
+        adjacentNodes.computeIfAbsent(node, k -> new HashMap<>()).put(line, distance);
     }
     
-    public Map<Node<T>, Integer> getAdjacentNodes() {
+    public Map<Node<T>, Map<String, Integer>> getAdjacentNodes() {
         return adjacentNodes;
     }
 

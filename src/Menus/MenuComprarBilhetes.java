@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,6 +80,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     /**
 
      * Creates new form Login_Application
+     * @param con
      */
     public MenuComprarBilhetes(Connection con) {
         initComponents();
@@ -536,11 +536,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
                 try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
 
-                    ResultSet rs2 = st.executeQuery("SELECT Nome, Distancia, Proximo FROM Paragens");
+                    ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
                     while (rs2.next()) {
                         String nodeName = rs2.getString("Nome");
                         Node<String> node = new Node<>(nodeName);
-                        nodesMap.put(nodeName, node);                    
+                        nodesMap.put(nodeName, node);
                     }
                     rs2.beforeFirst();
                     while(rs2.next()){
@@ -548,8 +548,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Node<String> node = nodesMap.get(nodeName);
                         String adjacentNodeName = rs2.getString("Proximo");
                         int distancia = rs2.getInt("Distancia");
+                        String lines = rs2.getString("Linha"); 
                         Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
-                        node.addAdjacentNode(adjacentNode, distancia);
+                        for (String line : lines.split(",")) { 
+                            node.addAdjacentNode(adjacentNode, line, distancia);
+                        }
                     }
 
                     /*for(Node<String> node : nodesMap.values()) {
@@ -562,8 +565,17 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         }
                     }*/
 
-                    dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
-                    dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    //dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
+                    //dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    
+                    
+                    // Calcula o menor caminho entre os nós de origem e destino
+                    Node<String> sourceNode = nodesMap.get(corSelecionada);
+                    Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
+                    List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
+                    dijkstra.printPaths(shortestPath);
+                    
+                    
                     nodesMap.clear();
 
                     //Calcular preço da viagem
@@ -584,11 +596,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
                 try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
 
-                    ResultSet rs2 = st.executeQuery("SELECT Nome, Distancia, Proximo FROM Paragens");
+                    ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
                     while (rs2.next()) {
                         String nodeName = rs2.getString("Nome");
                         Node<String> node = new Node<>(nodeName);
-                        nodesMap.put(nodeName, node);                    
+                        nodesMap.put(nodeName, node);
                     }
                     rs2.beforeFirst();
                     while(rs2.next()){
@@ -596,8 +608,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Node<String> node = nodesMap.get(nodeName);
                         String adjacentNodeName = rs2.getString("Proximo");
                         int distancia = rs2.getInt("Distancia");
+                        String lines = rs2.getString("Linha"); 
                         Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
-                        node.addAdjacentNode(adjacentNode, distancia);
+                        for (String line : lines.split(",")) { 
+                            node.addAdjacentNode(adjacentNode, line, distancia);
+                        }
                     }
 
                     /*for(Node<String> node : nodesMap.values()) {
@@ -610,8 +625,17 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         }
                     }*/
 
-                    dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
-                    dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    //dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
+                    //dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
+                    
+                    
+                    // Calcula o menor caminho entre os nós de origem e destino
+                    Node<String> sourceNode = nodesMap.get(corSelecionada);
+                    Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
+                    List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
+                    dijkstra.printPaths(shortestPath);
+                    
+                    
                     nodesMap.clear();
 
                     //Calcular preço da viagem

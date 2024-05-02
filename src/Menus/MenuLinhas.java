@@ -5,10 +5,6 @@
 
 package Menus;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +25,7 @@ public class MenuLinhas extends javax.swing.JFrame {
 
     /**
      * Creates new form Login_Application
+     * @param con
      */
     public MenuLinhas(Connection con) {
         initComponents();
@@ -293,10 +290,10 @@ public class MenuLinhas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
-        Statement stHorarios = null;
-        Statement stBilhetes = null;
-        ResultSet horarios = null;
-        ResultSet bilhetes = null;
+        Statement stHorarios;
+        Statement stBilhetes;
+        ResultSet horarios;
+        ResultSet bilhetes;
         Set<String> direcoesAdicionadas = new HashSet<>();
 
         try {
@@ -352,8 +349,8 @@ public class MenuLinhas extends javax.swing.JFrame {
         model.setRowCount(0);
         DefaultTableModel tblModel = (DefaultTableModel)TabelaHorario.getModel();
         
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
 
         try {
             st = con.createStatement();

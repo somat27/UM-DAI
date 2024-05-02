@@ -5,7 +5,6 @@
 package Menus;
 
 import javax.swing.ButtonGroup;
-import java.sql.Connection;
 
 /**
  *

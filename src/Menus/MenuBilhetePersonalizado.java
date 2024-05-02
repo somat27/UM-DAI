@@ -11,15 +11,16 @@ import com.google.zxing.common.BitMatrix;
 import javax.swing.ImageIcon;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.image.BufferedImage;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 
 
@@ -61,13 +62,12 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
             QrCode.repaint();
 
             TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
-        } catch (Exception e) {
+        } catch (WriterException | UnsupportedEncodingException e) {
             System.out.println(e);
         }
     }
     
-    public String LerBaseDados() {        
-        java.sql.Connection con = null;
+    public String LerBaseDados() {      
         Statement st = null;
         ResultSet rs = null;
 
@@ -85,19 +85,16 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 String tipo = rs.getString("Tipo_Bilhete");
                 
                 if(tipo.equals("Único")){
-                    if(linha.equals("Amarela")){
-                        quantidadeAmarela = Integer.parseInt(quantidade);
-                    }else if(linha.equals("Verde")){
-                        quantidadeVerde = Integer.parseInt(quantidade);;
-                    }else if(linha.equals("Azul")){
-                        quantidadeAzul = Integer.parseInt(quantidade);;
-                    }else if(linha.equals("Vermelha")){
-                        quantidadeVermelha = Integer.parseInt(quantidade);;
+                    switch (linha) {
+                        case "Amarela" -> quantidadeAmarela = Integer.parseInt(quantidade);
+                        case "Verde" -> quantidadeVerde = Integer.parseInt(quantidade);
+                        case "Azul" -> quantidadeAzul = Integer.parseInt(quantidade);
+                        case "Vermelha" -> quantidadeVermelha = Integer.parseInt(quantidade);
+                        default -> {}
                     }
                 }
             }
-            String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
-            return resultado;
+            return quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
         } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -111,9 +108,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         return null;
     }
     
-    private int pagina = 0;
+    private final int pagina = 0;
     /**
      * Creates new form Login_Application
+     * @param con
      */
     public MenuBilhetePersonalizado(Connection con) {
         initComponents();

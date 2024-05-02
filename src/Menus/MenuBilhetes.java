@@ -19,8 +19,10 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.image.BufferedImage;
+import java.io.UnsupportedEncodingException;
 
 
 
@@ -61,14 +63,14 @@ public class MenuBilhetes extends javax.swing.JFrame {
             QrCode.repaint();
 
             TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
-        } catch (Exception e) {
+        } catch (WriterException | UnsupportedEncodingException e) {
             System.out.println(e);
         }
     }
     
     public String LerBaseDados() {        
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         String resultado = "";
 
         try {
@@ -90,9 +92,10 @@ public class MenuBilhetes extends javax.swing.JFrame {
         return null;
     }
     
-    private int pagina = 0;
+    private final int pagina = 0;
     /**
      * Creates new form Login_Application
+     * @param con
      */
     public MenuBilhetes(Connection con) {
         initComponents();
