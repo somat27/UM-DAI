@@ -456,6 +456,45 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         MBWay.setVisible(true);
     }//GEN-LAST:event_MBWayActionPerformed
 
+    public void calcularMelhorRota() {
+        String corSelecionada = (String) CorLinha.getSelectedItem();
+        String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+        if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
+            try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
+
+            ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
+            while (rs2.next()) {
+                String nodeName = rs2.getString("Nome");
+                Node<String> node = new Node<>(nodeName);
+                nodesMap.put(nodeName, node);
+            }
+            rs2.beforeFirst();
+            while(rs2.next()){
+                String nodeName = rs2.getString("Nome");
+                Node<String> node = nodesMap.get(nodeName);
+                String adjacentNodeName = rs2.getString("Proximo");
+                int distancia = rs2.getInt("Distancia");
+                String lines = rs2.getString("Linha"); 
+                Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
+                for (String line : lines.split(",")) { 
+                    node.addAdjacentNode(adjacentNode, line, distancia);
+                }
+            }
+
+            Node<String> sourceNode = nodesMap.get(corSelecionada);
+            Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
+            List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
+            dijkstra.printPaths(shortestPath);
+            nodesMap.clear();
+
+            //Calcular preço da viagem
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+    }
+    
     private void TipoDeBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDeBilheteActionPerformed
         if(TipoDeBilhete.getSelectedIndex() == 0){
             TextoCorLinha.setText("Cor da Linha");
@@ -531,59 +570,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         if(TipoDeBilhete.getSelectedIndex() == 0){
             atualizarValorTotal();
         } else if(TipoDeBilhete.getSelectedIndex() == 1){
-            String corSelecionada = (String) CorLinha.getSelectedItem();
-            String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
-            if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
-                try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
-
-                    ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
-                    while (rs2.next()) {
-                        String nodeName = rs2.getString("Nome");
-                        Node<String> node = new Node<>(nodeName);
-                        nodesMap.put(nodeName, node);
-                    }
-                    rs2.beforeFirst();
-                    while(rs2.next()){
-                        String nodeName = rs2.getString("Nome");
-                        Node<String> node = nodesMap.get(nodeName);
-                        String adjacentNodeName = rs2.getString("Proximo");
-                        int distancia = rs2.getInt("Distancia");
-                        String lines = rs2.getString("Linha"); 
-                        Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
-                        for (String line : lines.split(",")) { 
-                            node.addAdjacentNode(adjacentNode, line, distancia);
-                        }
-                    }
-
-                    /*for(Node<String> node : nodesMap.values()) {
-                        System.out.println("Paragem: " + node.getData());
-                        System.out.println(" - Proximas:");
-                        for (Map.Entry<Node<String>, Integer> entry : node.getAdjacentNodes().entrySet()) {
-                            Node<String> adjacentNode = entry.getKey();
-                            int weight = entry.getValue();
-                            System.out.println("  - "+adjacentNode.getData()+" (Distancia: "+weight+")");
-                        }
-                    }*/
-
-                    //dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
-                    //dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
-                    
-                    
-                    // Calcula o menor caminho entre os nós de origem e destino
-                    Node<String> sourceNode = nodesMap.get(corSelecionada);
-                    Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
-                    List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
-                    dijkstra.printPaths(shortestPath);
-                    
-                    
-                    nodesMap.clear();
-
-                    //Calcular preço da viagem
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            //calcularMelhorRota();
         }
     }//GEN-LAST:event_CorLinhaActionPerformed
 
@@ -591,59 +578,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         if(TipoDeBilhete.getSelectedIndex() == 0){
             atualizarValorTotal();
         } else if(TipoDeBilhete.getSelectedIndex() == 1){
-            String corSelecionada = (String) CorLinha.getSelectedItem();
-            String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
-            if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
-                try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
-
-                    ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
-                    while (rs2.next()) {
-                        String nodeName = rs2.getString("Nome");
-                        Node<String> node = new Node<>(nodeName);
-                        nodesMap.put(nodeName, node);
-                    }
-                    rs2.beforeFirst();
-                    while(rs2.next()){
-                        String nodeName = rs2.getString("Nome");
-                        Node<String> node = nodesMap.get(nodeName);
-                        String adjacentNodeName = rs2.getString("Proximo");
-                        int distancia = rs2.getInt("Distancia");
-                        String lines = rs2.getString("Linha"); 
-                        Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
-                        for (String line : lines.split(",")) { 
-                            node.addAdjacentNode(adjacentNode, line, distancia);
-                        }
-                    }
-
-                    /*for(Node<String> node : nodesMap.values()) {
-                        System.out.println("Paragem: " + node.getData());
-                        System.out.println(" - Proximas:");
-                        for (Map.Entry<Node<String>, Integer> entry : node.getAdjacentNodes().entrySet()) {
-                            Node<String> adjacentNode = entry.getKey();
-                            int weight = entry.getValue();
-                            System.out.println("  - "+adjacentNode.getData()+" (Distancia: "+weight+")");
-                        }
-                    }*/
-
-                    //dijkstra.calculateShortestPath(nodesMap.get(corSelecionada));
-                    //dijkstra.printPaths(nodesMap.get(quantidadeSelecionadaStr));
-                    
-                    
-                    // Calcula o menor caminho entre os nós de origem e destino
-                    Node<String> sourceNode = nodesMap.get(corSelecionada);
-                    Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
-                    List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
-                    dijkstra.printPaths(shortestPath);
-                    
-                    
-                    nodesMap.clear();
-
-                    //Calcular preço da viagem
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            //calcularMelhorRota();
         }
     }//GEN-LAST:event_QuantidadeActionPerformed
 
@@ -795,7 +730,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 if(TipoDeBilhete.getSelectedIndex() == 0){
                     ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
                 } else if(TipoDeBilhete.getSelectedIndex() == 1){
-                    //Guardar na base de dados
+                    calcularMelhorRota();
                 }
             }
         }

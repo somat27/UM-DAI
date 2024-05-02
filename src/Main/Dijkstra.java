@@ -70,6 +70,7 @@ public class Dijkstra<T> {
     }
 
     public void printPaths(List<Node<T>> path) {
+        int distance = 0;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < path.size(); i++) {
             Node<T> node = path.get(i);
@@ -78,11 +79,11 @@ public class Dijkstra<T> {
                 Node<T> nextNode = path.get(i + 1);
                 List<String> commonLines = getCommonLines(node, nextNode);
                 String selectedLine = selectLine(commonLines);
-                int distance = node.getAdjacentNodes().get(nextNode).get(selectedLine);
-                sb.append(" -> (").append(selectedLine.trim()).append(", ").append(distance).append("km) -> ");
+                distance = distance + node.getAdjacentNodes().get(nextNode).get(selectedLine);                
+                sb.append(" -> (").append(selectedLine.trim()).append(") -> ");
             }
         }
-        System.out.println(sb.toString());
+        System.out.println(sb.toString() + "\nTotal KM: " + distance);
     }
 
     
