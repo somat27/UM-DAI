@@ -485,6 +485,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
             List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
             dijkstra.printPaths(shortestPath);
+            
             nodesMap.clear();
 
             //Calcular preço da viagem

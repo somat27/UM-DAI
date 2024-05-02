@@ -12,7 +12,7 @@ import java.util.*;
  * @param <T>
  */
 public class Dijkstra<T> {    
-    public List<Node<T>> calculateShortestPath(Node<T> source, Node<T> destination) {
+     public List<Node<T>> calculateShortestPath(Node<T> source, Node<T> destination) {
         Map<Node<T>, Node<T>> predecessors = new HashMap<>();
         Map<Node<T>, Integer> distances = new HashMap<>();
         Set<Node<T>> settledNodes = new HashSet<>();
@@ -59,7 +59,7 @@ public class Dijkstra<T> {
             }
         }
     }
-    
+   
     private List<Node<T>> getPath(Map<Node<T>, Node<T>> predecessors, Node<T> destination) {
         List<Node<T>> path = new ArrayList<>();
         for (Node<T> node = destination; node != null; node = predecessors.get(node)) {
@@ -68,25 +68,33 @@ public class Dijkstra<T> {
         Collections.reverse(path);
         return path;
     }
-
+    
     public void printPaths(List<Node<T>> path) {
+        String linhaAnterior = null;
         int distance = 0;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < path.size(); i++) {
             Node<T> node = path.get(i);
-            sb.append(node.getName());
             if (i < path.size() - 1) {
                 Node<T> nextNode = path.get(i + 1);
                 List<String> commonLines = getCommonLines(node, nextNode);
                 String selectedLine = selectLine(commonLines);
-                distance = distance + node.getAdjacentNodes().get(nextNode).get(selectedLine);                
-                sb.append(" -> (").append(selectedLine.trim()).append(") -> ");
+                distance = distance + node.getAdjacentNodes().get(nextNode).get(selectedLine);     
+                if(linhaAnterior == null){
+                    linhaAnterior = selectedLine;
+                    sb.append(node.getName()).append(" -> (").append(selectedLine.trim()).append(") -> ");
+                }else if(linhaAnterior.trim().equals(selectedLine.trim())){
+                }else if(!linhaAnterior.trim().equals(selectedLine.trim())){
+                    linhaAnterior = selectedLine;
+                    sb.append(node.getName()).append(" -> (").append(selectedLine.trim()).append(") -> ");
+                }
             }
         }
+        sb.append(path.get(path.size()-1).getName());
         System.out.println(sb.toString() + "\nTotal KM: " + distance);
     }
 
-    
+   
     private List<String> getCommonLines(Node<T> node1, Node<T> node2) {
         List<String> commonLines = new ArrayList<>();
         for (Map.Entry<Node<T>, Map<String, Integer>> entry : node1.getAdjacentNodes().entrySet()) {
