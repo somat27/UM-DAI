@@ -4,6 +4,7 @@
  */
 package Main;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -69,7 +70,7 @@ public class Dijkstra<T> {
         return path;
     }
     
-    public void printPaths(List<Node<T>> path) {
+    public Object[] printPaths(List<Node<T>> path) {
         String linhaAnterior = null;
         int distance = 0;
         int totalTrocas = 0;
@@ -100,7 +101,14 @@ public class Dijkstra<T> {
             }
         }
         sb.append(path.get(path.size()-1).getName());
-        System.out.println(sb.toString() + "\nTotal KM: " + distance + "\nTotal trocas: " + totalTrocas + "\nTotal Paragens: " + path.size());
+        
+        Object[] valores = {
+            sb.toString(),
+            distance,
+            totalTrocas,
+            path.size()
+        };
+        return valores;
     }
 
    
@@ -123,9 +131,11 @@ public class Dijkstra<T> {
         if (!commonLinesAtual.isEmpty()) {
             if (antigaLinha == null){
                 for (String linhaAtual : commonLinesAtual) {
-                    for (String proximaLinha : commonLinesProxima) {
-                        if(linhaAtual.equals(proximaLinha)){
-                            return linhaAtual;
+                    if(commonLinesProxima!=null){
+                        for (String proximaLinha : commonLinesProxima) {
+                            if(linhaAtual.equals(proximaLinha)){
+                                return linhaAtual;
+                            }
                         }
                     }
                 }

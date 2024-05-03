@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -64,6 +65,30 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 insertStatement.setInt(2, Integer.parseInt(quantidadeSelecionadaStr));
                 insertStatement.executeUpdate();
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (updateStatement != null) updateStatement.close();
+                if (insertStatement != null) insertStatement.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void ComprarBilhetePersonalizado(String Rota) {
+        PreparedStatement updateStatement = null;
+        PreparedStatement insertStatement = null;
+        ResultSet rs = null;
+
+        try {
+            String insertQuery = "INSERT INTO BilhetesPersonalizados (ID_Cliente, Rota) VALUES (?, ?)";
+            insertStatement = con.prepareStatement(insertQuery);
+            insertStatement.setInt(1, 1);
+            insertStatement.setString(2, Rota);
+            insertStatement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -456,43 +481,62 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         MBWay.setVisible(true);
     }//GEN-LAST:event_MBWayActionPerformed
 
+    String Caminho = null;
+    
     public void calcularMelhorRota() {
         String corSelecionada = (String) CorLinha.getSelectedItem();
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
         if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
             try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
 
-            ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
-            while (rs2.next()) {
-                String nodeName = rs2.getString("Nome");
-                Node<String> node = new Node<>(nodeName);
-                nodesMap.put(nodeName, node);
-            }
-            rs2.beforeFirst();
-            while(rs2.next()){
-                String nodeName = rs2.getString("Nome");
-                Node<String> node = nodesMap.get(nodeName);
-                String adjacentNodeName = rs2.getString("Proximo");
-                int distancia = rs2.getInt("Distancia");
-                String lines = rs2.getString("Linha"); 
-                Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
-                for (String line : lines.split(",")) { 
-                    node.addAdjacentNode(adjacentNode, line, distancia);
+                ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
+                while (rs2.next()) {
+                    String nodeName = rs2.getString("Nome");
+                    Node<String> node = new Node<>(nodeName);
+                    nodesMap.put(nodeName, node);
                 }
+                rs2.beforeFirst();
+                while(rs2.next()){
+                    String nodeName = rs2.getString("Nome");
+                    Node<String> node = nodesMap.get(nodeName);
+                    String adjacentNodeName = rs2.getString("Proximo");
+                    int distancia = rs2.getInt("Distancia");
+                    String lines = rs2.getString("Linha"); 
+                    Node<String> adjacentNode = nodesMap.get(adjacentNodeName);
+                    for (String line : lines.split(",")) { 
+                        node.addAdjacentNode(adjacentNode, line, distancia);
+                    }
+                }
+
+                Node<String> sourceNode = nodesMap.get(corSelecionada);
+                Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
+                if(sourceNode!=destinationNode) {
+                    List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
+                    //Calcular preço da viagem
+                    Object[] valores = dijkstra.printPaths(shortestPath);
+                    //valores[0] -> Caminho
+                    //valores[1] -> KM's
+                    //valores[2] -> Qtd Trocas
+                    //valores[3] -> Qtd Paragens
+                    int totalTrocas = (int) valores[2];
+                    
+                    if(totalTrocas>1){
+                        double resultado = (totalTrocas * 0.74) - (totalTrocas * 0.05 * 0.74);
+                        DecimalFormat df = new DecimalFormat("#.##"); 
+                        Preco.setText(df.format(resultado));
+                        valor = (float) resultado;
+                        
+                        Caminho = (String) valores[0];
+                    }else{
+                        //andou sempre na mesma linha
+                        Preco.setText("0");
+                    }
+                }
+
+                nodesMap.clear();
+            } catch (SQLException ex) {
+                Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            Node<String> sourceNode = nodesMap.get(corSelecionada);
-            Node<String> destinationNode = nodesMap.get(quantidadeSelecionadaStr);
-            List<Node<String>> shortestPath = dijkstra.calculateShortestPath(sourceNode, destinationNode);
-            dijkstra.printPaths(shortestPath);
-            
-            nodesMap.clear();
-
-            //Calcular preço da viagem
-
-        } catch (SQLException ex) {
-            Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
-        }
         }
     }
     
@@ -571,7 +615,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         if(TipoDeBilhete.getSelectedIndex() == 0){
             atualizarValorTotal();
         } else if(TipoDeBilhete.getSelectedIndex() == 1){
-            //calcularMelhorRota();
+            calcularMelhorRota();
         }
     }//GEN-LAST:event_CorLinhaActionPerformed
 
@@ -579,7 +623,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         if(TipoDeBilhete.getSelectedIndex() == 0){
             atualizarValorTotal();
         } else if(TipoDeBilhete.getSelectedIndex() == 1){
-            //calcularMelhorRota();
+            calcularMelhorRota();
         }
     }//GEN-LAST:event_QuantidadeActionPerformed
 
@@ -731,7 +775,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 if(TipoDeBilhete.getSelectedIndex() == 0){
                     ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
                 } else if(TipoDeBilhete.getSelectedIndex() == 1){
-                    calcularMelhorRota();
+                    //calcularMelhorRota();
+                    ComprarBilhetePersonalizado(Caminho);
                 }
             }
         }
