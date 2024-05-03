@@ -72,45 +72,79 @@ public class Dijkstra<T> {
     public void printPaths(List<Node<T>> path) {
         String linhaAnterior = null;
         int distance = 0;
+        int totalTrocas = 0;
         StringBuilder sb = new StringBuilder();
+        String commonLinesAntiga = null;
+        List<String> commonLinesAtual = null;
+        List<String> commonLinesProxima = null;
         for (int i = 0; i < path.size(); i++) {
             Node<T> node = path.get(i);
             if (i < path.size() - 1) {
                 Node<T> nextNode = path.get(i + 1);
-                List<String> commonLines = getCommonLines(node, nextNode);
-                String selectedLine = selectLine(commonLines);
+                commonLinesAtual = getCommonLines(node, nextNode);
+                Node<T> nextnextNode = null;
+                if (i + 2 < path.size()){
+                    if (path.get(i + 2)!=null){
+                        nextnextNode = path.get(i + 2);
+                        commonLinesProxima = getCommonLines(nextNode, nextnextNode);
+                    }
+                }
+                String selectedLine = selectLine(commonLinesAtual, commonLinesAntiga, commonLinesProxima);
+                commonLinesAntiga = selectedLine;
                 distance = distance + node.getAdjacentNodes().get(nextNode).get(selectedLine);     
-                if(linhaAnterior == null){
+                if(linhaAnterior == null || !linhaAnterior.trim().equals(selectedLine.trim())){
                     linhaAnterior = selectedLine;
                     sb.append(node.getName()).append(" -> (").append(selectedLine.trim()).append(") -> ");
-                }else if(linhaAnterior.trim().equals(selectedLine.trim())){
-                }else if(!linhaAnterior.trim().equals(selectedLine.trim())){
-                    linhaAnterior = selectedLine;
-                    sb.append(node.getName()).append(" -> (").append(selectedLine.trim()).append(") -> ");
+                    totalTrocas++;
                 }
             }
         }
         sb.append(path.get(path.size()-1).getName());
-        System.out.println(sb.toString() + "\nTotal KM: " + distance);
+        System.out.println(sb.toString() + "\nTotal KM: " + distance + "\nTotal trocas: " + totalTrocas + "\nTotal Paragens: " + path.size());
     }
 
    
     private List<String> getCommonLines(Node<T> node1, Node<T> node2) {
         List<String> commonLines = new ArrayList<>();
-        for (Map.Entry<Node<T>, Map<String, Integer>> entry : node1.getAdjacentNodes().entrySet()) {
-            Node<T> adjacentNode = entry.getKey();
-            if (adjacentNode.equals(node2)) {
-                commonLines.addAll(entry.getValue().keySet());
-                break;
+        if(node2!=null){
+            for (Map.Entry<Node<T>, Map<String, Integer>> entry : node1.getAdjacentNodes().entrySet()) {
+                Node<T> adjacentNode = entry.getKey();
+                if (adjacentNode.equals(node2)) {
+                    commonLines.addAll(entry.getValue().keySet());
+                    break;
+                }
             }
         }
         return commonLines;
     }
 
 
-    private String selectLine(List<String> lines) {
-        if (!lines.isEmpty()) {
-            return lines.get(0); // Seleciona a primeira linha comum
+    private String selectLine(List<String> commonLinesAtual, String antigaLinha, List<String> commonLinesProxima) {
+        if (!commonLinesAtual.isEmpty()) {
+            if (antigaLinha == null){
+                for (String linhaAtual : commonLinesAtual) {
+                    for (String proximaLinha : commonLinesProxima) {
+                        if(linhaAtual.equals(proximaLinha)){
+                            return linhaAtual;
+                        }
+                    }
+                }
+                return commonLinesAtual.get(0);
+            }else{
+                for (String linhaAtual : commonLinesAtual) {
+                    if(linhaAtual.equals(antigaLinha)){
+                        return linhaAtual;
+                    }
+                }
+                for (String linhaAtual : commonLinesAtual) {
+                    for (String proximaLinha : commonLinesProxima) {
+                        if(linhaAtual.equals(proximaLinha)){
+                            return linhaAtual;
+                        }
+                    }
+                }
+                return commonLinesAtual.get(0);
+            }
         } else {
             return "Sem linha comum";
         }
