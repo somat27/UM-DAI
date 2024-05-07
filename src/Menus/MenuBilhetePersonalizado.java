@@ -32,78 +32,66 @@ import java.sql.Connection;
 public class MenuBilhetePersonalizado extends javax.swing.JFrame {
 
     private final Connection con;
+    private int nBilhete = 0;
     
     public void GerarQrCode() {
         String QrCodeData = LerBaseDados();
-        
-        try {
-            String charset = "UTF-8";
-            
-            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
-                    BarcodeFormat.QR_CODE,350,350,hintMap);
+        if(QrCodeData != null) {
+            try {
+                String charset = "UTF-8";
 
-            //MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
-            // Convertendo a matriz BitMatrix em uma imagem BufferedImage
-            int width = matrix.getWidth();
-            int height = matrix.getHeight();
-            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
+                hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
+                        BarcodeFormat.QR_CODE,350,350,hintMap);
+
+                //MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
+                // Convertendo a matriz BitMatrix em uma imagem BufferedImage
+                int width = matrix.getWidth();
+                int height = matrix.getHeight();
+                BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                    }
                 }
+
+                // Convertendo a imagem BufferedImage em um ImageIcon
+                ImageIcon icon = new ImageIcon(image);
+                QrCode.setIcon(icon);
+                QrCode.revalidate();
+                QrCode.repaint();
+
+                TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
+            } catch (WriterException | UnsupportedEncodingException e) {
+                System.out.println(e);
             }
-
-            // Convertendo a imagem BufferedImage em um ImageIcon
-            ImageIcon icon = new ImageIcon(image);
-            QrCode.setIcon(icon);
-            QrCode.revalidate();
-            QrCode.repaint();
-
-            TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
-        } catch (WriterException | UnsupportedEncodingException e) {
-            System.out.println(e);
         }
     }
     
     public String LerBaseDados() {      
-        Statement st = null;
-        ResultSet rs = null;
-
+        Statement st;
+        ResultSet rs;
+        
         try {
             st = con.createStatement();
             rs = st.executeQuery("SELECT * FROM BilhetesPersonalizados");
-            int quantidadeAmarela = 0;
-            int quantidadeVerde = 0;
-            int quantidadeAzul = 0;
-            int quantidadeVermelha = 0;
-
-            while (rs.next()) {
-                String linha = rs.getString("Linha");
-                String quantidade = rs.getString("Quantidade_Bilhetes");
-                String tipo = rs.getString("Tipo_Bilhete");
-                
-                if(tipo.equals("Único")){
-                    switch (linha) {
-                        case "Amarela" -> quantidadeAmarela = Integer.parseInt(quantidade);
-                        case "Verde" -> quantidadeVerde = Integer.parseInt(quantidade);
-                        case "Azul" -> quantidadeAzul = Integer.parseInt(quantidade);
-                        case "Vermelha" -> quantidadeVermelha = Integer.parseInt(quantidade);
-                        default -> {}
+            String resultado = null;
+            int i=0;
+            while(rs.next()) {
+                String rota = rs.getString("Rota");
+                if(i == nBilhete) {
+                    if(rs.isLast()) {
+                        BotaoProximoBilhete.setEnabled(false);
                     }
+                    resultado = rota;
+                    return resultado;
                 }
+                i++;
             }
-            return quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
+            return resultado;
         } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (st != null) st.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return null;
     }
@@ -116,7 +104,8 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     public MenuBilhetePersonalizado(Connection con) {
         initComponents();
         this.con = con;
-        //GerarQrCode();
+        BotaoAnteriorBilhete.setEnabled(false);
+        GerarQrCode();
         BotaoProximo.setEnabled(false);
      }
 
@@ -140,6 +129,8 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         TextoPercurso = new javax.swing.JLabel();
         TextoCaminho = new javax.swing.JLabel();
         QrCode = new javax.swing.JLabel();
+        BotaoProximoBilhete = new javax.swing.JButton();
+        BotaoAnteriorBilhete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 71, 103));
@@ -233,11 +224,25 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         TextoCaminho.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 24)); // NOI18N
         TextoCaminho.setForeground(new java.awt.Color(255, 255, 255));
         TextoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        TextoCaminho.setText("jLabel1");
+        TextoCaminho.setText("Sem Bilhetes");
 
         QrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         QrCode.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Assets/QrVazio.png")));
         QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        BotaoProximoBilhete.setText("Proximo");
+        BotaoProximoBilhete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoProximoBilheteActionPerformed(evt);
+            }
+        });
+
+        BotaoAnteriorBilhete.setText("Anterior");
+        BotaoAnteriorBilhete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoAnteriorBilheteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout FundoLayout = new javax.swing.GroupLayout(Fundo);
         Fundo.setLayout(FundoLayout);
@@ -260,7 +265,12 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(FundoLayout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addComponent(QrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(FundoLayout.createSequentialGroup()
+                        .addComponent(BotaoAnteriorBilhete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(BotaoProximoBilhete))
+                    .addComponent(QrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         FundoLayout.setVerticalGroup(
@@ -275,9 +285,13 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                     .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TextoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
+                .addGap(22, 22, 22)
+                .addGroup(FundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BotaoProximoBilhete)
+                    .addComponent(BotaoAnteriorBilhete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(QrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -319,10 +333,27 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         Menu.setVisible(true);
     }//GEN-LAST:event_BotaoAnteriorMouseClicked
 
+    private void BotaoProximoBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoBilheteActionPerformed
+        nBilhete++;
+        GerarQrCode();
+        BotaoAnteriorBilhete.setEnabled(true);
+    }//GEN-LAST:event_BotaoProximoBilheteActionPerformed
+
+    private void BotaoAnteriorBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteActionPerformed
+        nBilhete--;
+        if(nBilhete == 0) {
+            BotaoAnteriorBilhete.setEnabled(false);
+        }
+        GerarQrCode();
+        BotaoProximoBilhete.setEnabled(true);
+    }//GEN-LAST:event_BotaoAnteriorBilheteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoAnterior;
+    private javax.swing.JButton BotaoAnteriorBilhete;
     private javax.swing.JButton BotaoProximo;
+    private javax.swing.JButton BotaoProximoBilhete;
     private javax.swing.JLabel BotaoVoltar;
     private javax.swing.JPanel Fundo;
     private javax.swing.JLabel QrCode;
