@@ -4,6 +4,7 @@
  */
 package Menus;
 
+import Main.Notification.Notification;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -195,6 +196,9 @@ public class MenuBRT extends javax.swing.JFrame {
         dispose();
         MenuComprarBilhetes Menu = new MenuComprarBilhetes(con); 
         Menu.setVisible(true);
+        
+        //Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "O Pepin é burro!");
+        //panel.showNotification();
     }//GEN-LAST:event_jLabel4MouseClicked
 
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
