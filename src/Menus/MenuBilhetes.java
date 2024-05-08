@@ -84,6 +84,8 @@ public class MenuBilhetes extends javax.swing.JFrame {
                 if(quantidade>0)
                     resultado = resultado + quantidade + " - " + linha + "\n";
             }
+            st.close();
+            rs.close();
             //String resultado = quantidadeAmarela + " - Amarela \n" + quantidadeVerde + " - Verde \n" + quantidadeAzul + " - Azul \n" + quantidadeVermelha + " - Vermelha";
             return resultado;
         } catch (SQLException ex) {

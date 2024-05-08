@@ -85,10 +85,14 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                         BotaoProximoBilhete.setEnabled(false);
                     }
                     resultado = rota;
+                    st.close();
+                    rs.close();
                     return resultado;
                 }
                 i++;
             }
+            st.close();
+            rs.close();
             return resultado;
         } catch (SQLException ex) {
             Logger.getLogger(MenuBilhetePersonalizado.class.getName()).log(Level.SEVERE, null, ex);

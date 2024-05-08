@@ -532,7 +532,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Preco.setText("0");
                     }
                 }
-
+                st.close();
+                rs2.close();
                 nodesMap.clear();
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
