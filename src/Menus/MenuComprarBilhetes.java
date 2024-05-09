@@ -6,6 +6,7 @@ package Menus;
 
 import Main.Dijkstra;
 import Main.Node;
+import Main.Notification.Notification;
 import java.util.Random;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -529,7 +530,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Caminho = (String) valores[0];
                     }else{
                         //andou sempre na mesma linha
-                        Preco.setText("0");
+                        Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Paragens pertencem a mesma linha");
+                        panel.showNotification();
+                        Preco.setText("");
                     }
                 }
                 st.close();
@@ -693,6 +696,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
         String tipoBilhete = (String) TipoDeBilhete.getSelectedItem();
         
+        if(Preco.getText().equals("")) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Erro a efetuar compra \nComprar em bilhete unico");
+            panel.showNotification();
+        }
+        else
         if (corSelecionada != null && quantidadeSelecionadaStr != null && tipoBilhete != null){
             if (Multibanco.isSelected()) {
                 Random random = new Random();
@@ -777,7 +785,12 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                     ComprarBilheteUnico(corSelecionada, quantidadeSelecionadaStr, tipoBilhete);
                 } else if(TipoDeBilhete.getSelectedIndex() == 1){
                     //calcularMelhorRota();
+                    
                     ComprarBilhetePersonalizado(Caminho);
+                }
+                if(!Preco.getText().equals("")) {
+                    Notification panel = new Notification(this, Notification.Type.SUCCESS, Notification.Location.TOP_CENTER, "Compra efetuada com sucesso");
+                    panel.showNotification();
                 }
             }
         }
