@@ -483,11 +483,20 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     }//GEN-LAST:event_MBWayActionPerformed
 
     String Caminho = null;
+    private int a=0;
     
     public void calcularMelhorRota() {
         String corSelecionada = (String) CorLinha.getSelectedItem();
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
+        
         if(corSelecionada != null && quantidadeSelecionadaStr != null){ 
+            if(corSelecionada.equals(quantidadeSelecionadaStr) && a!=0) {
+                Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Selecione paregens distintas");
+                panel.showNotification();
+                Preco.setText("");
+                return;
+            }
+            a=1;
             try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
 
                 ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
@@ -530,14 +539,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Caminho = (String) valores[0];
                     }else{
                         //andou sempre na mesma linha
-                        if(CorLinha.getSelectedItem().equals(Quantidade.getSelectedItem())) {
-                            Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Selecione paregens distintas");
-                            panel.showNotification();
-                        }
-                        else {
-                            Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Paragens pertencem a mesma linha");
-                            panel.showNotification();
-                        }
+                        
+                        Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Paragens pertencem a mesma linha");
+                        panel.showNotification();
                         Preco.setText("");
                     }
                 }
@@ -706,16 +710,42 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();
         String tipoBilhete = (String) TipoDeBilhete.getSelectedItem();
         
-        if(Preco.getText().equals("")) {
-            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Erro a efetuar compra \nComprar em bilhete unico");
+        if(!Multibanco.isSelected() && !Cartao.isSelected() && !MBWay.isSelected()) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione o método de pagamento");
             panel.showNotification();
         }
-        else
-        if (corSelecionada != null && quantidadeSelecionadaStr != null && tipoBilhete != null){
+        
+        if(quantidadeSelecionadaStr == null && tipoBilhete.equals("Único")) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione a quantidade");
+            panel.showNotification();
+        }
+        if(corSelecionada == null && tipoBilhete.equals("Único")) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione a linha");
+            panel.showNotification();
+        }
+        
+        if(quantidadeSelecionadaStr == null && tipoBilhete.equals("Personalizado")) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione a paragem final");
+            panel.showNotification();
+        }
+        if(corSelecionada == null && tipoBilhete.equals("Personalizado")) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione a paragem inicial");
+            panel.showNotification();
+        }
+        
+        if(Preco.getText().equals("") && quantidadeSelecionadaStr != null && corSelecionada != null) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Erro a efetuar compra, comprar em bilhete unico");
+            panel.showNotification();
+            
+            if(!Multibanco.isSelected() && !Cartao.isSelected() && !MBWay.isSelected()) {
+            Notification panel1 = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione o método de pagamento");
+            panel1.showNotification();
+            }
+        }else   if (corSelecionada != null && quantidadeSelecionadaStr != null && tipoBilhete != null){
             if (Multibanco.isSelected()) {
                 Random random = new Random();
                 long randomN = random.nextInt(100000001);
-                String mensagem = String.format("Entidade: 00000\nReferência: %d\nValor: %.2f", randomN, valor);
+                String mensagem = "Entidade: 00000\nReferência: " + randomN + "\nValor: " + Preco.getText() ;
                 JOptionPane.showMessageDialog(null, mensagem, "Detalhes do Pagamento", JOptionPane.INFORMATION_MESSAGE);
                 pagou = true;
             }else if(MBWay.isSelected()){
@@ -742,6 +772,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             }else if(Cartao.isSelected()){
                 while(count2 != 2){
                     numeroCartao = JOptionPane.showInputDialog(null, "Digite o número do cartão de crédito (16 dígitos):");
+                    if(numeroCartao == null) {
+                        return;
+                    }
                     if(numeroCartao.length()!= 16){
                         JOptionPane.showMessageDialog(null, "O número do cartão de crédito deve ter 16 digitos!", "Erro", JOptionPane.ERROR_MESSAGE);
                         continue;

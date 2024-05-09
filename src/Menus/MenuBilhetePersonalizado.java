@@ -84,7 +84,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 String rota = rs.getString("Rota");
                 if(i == nBilhete) {
                     if(rs.isLast()) {
-                        BotaoProximoBilhete.setEnabled(false);
+                        BotaoProximoBilhete.setVisible(false);
                     }
                     resultado = rota;
                     st.close();
@@ -111,7 +111,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         initComponents();
         this.con = con;
         erro = -1;
-        BotaoAnteriorBilhete.setEnabled(false);
+        BotaoAnteriorBilhete.setVisible(false);
         GerarQrCode();
         BotaoProximo.setEnabled(false);
      }
@@ -353,38 +353,26 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     private void BotaoProximoBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoBilheteActionPerformed
         nBilhete++;
         GerarQrCode();
-        BotaoAnteriorBilhete.setEnabled(true);
+        BotaoAnteriorBilhete.setVisible(true);
         erro = 0;
     }//GEN-LAST:event_BotaoProximoBilheteActionPerformed
 
     private void BotaoAnteriorBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteActionPerformed
         nBilhete--;
         if(nBilhete == 0) {
-            BotaoAnteriorBilhete.setEnabled(false);
+            BotaoAnteriorBilhete.setVisible(false);
         }
         GerarQrCode();
-        BotaoProximoBilhete.setEnabled(true);
+        BotaoProximoBilhete.setVisible(true);
         erro = 0;
     }//GEN-LAST:event_BotaoAnteriorBilheteActionPerformed
 
     private void BotaoProximoBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoBilheteMouseClicked
-        if(!BotaoProximoBilhete.isEnabled()){
-            if(erro != 0) {
-            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Não existe mais bilhetes");
-            panel.showNotification();
-            }
-            erro = -1;
-        }
+        
     }//GEN-LAST:event_BotaoProximoBilheteMouseClicked
 
     private void BotaoAnteriorBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteMouseClicked
-        if(!BotaoAnteriorBilhete.isEnabled()){
-            if(erro != 0) {
-            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Não existe mais bilhetes");
-            panel.showNotification();
-            }
-            erro = -1;
-        }
+        
     }//GEN-LAST:event_BotaoAnteriorBilheteMouseClicked
 
 
