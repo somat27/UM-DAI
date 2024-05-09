@@ -530,8 +530,14 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Caminho = (String) valores[0];
                     }else{
                         //andou sempre na mesma linha
-                        Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Paragens pertencem a mesma linha");
-                        panel.showNotification();
+                        if(CorLinha.getSelectedItem().equals(Quantidade.getSelectedItem())) {
+                            Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Selecione paregens distintas");
+                            panel.showNotification();
+                        }
+                        else {
+                            Notification panel = new Notification(this, Notification.Type.INFO, Notification.Location.TOP_CENTER, "Paragens pertencem a mesma linha");
+                            panel.showNotification();
+                        }
                         Preco.setText("");
                     }
                 }
@@ -608,7 +614,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Quantidade.addItem(estacao);
                         paragensAdicionadas.add(estacao);
                     }
+                    
                 }
+                CorLinha.setSelectedItem(null);
+                Quantidade.setSelectedItem(null);
+                Preco.setText("");
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -269,6 +269,7 @@
             <Property name="text" type="java.lang.String" value="Proximo"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="BotaoProximoBilheteMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoProximoBilheteActionPerformed"/>
           </Events>
         </Component>
@@ -277,6 +278,7 @@
             <Property name="text" type="java.lang.String" value="Anterior"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="BotaoAnteriorBilheteMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoAnteriorBilheteActionPerformed"/>
           </Events>
         </Component>

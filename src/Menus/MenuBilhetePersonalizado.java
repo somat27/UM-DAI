@@ -5,6 +5,7 @@
 package Menus;
 
 
+import Main.Notification.Notification;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
@@ -33,6 +34,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
 
     private final Connection con;
     private int nBilhete = 0;
+    private int erro = 0;
     
     public void GerarQrCode() {
         String QrCodeData = LerBaseDados();
@@ -108,6 +110,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
     public MenuBilhetePersonalizado(Connection con) {
         initComponents();
         this.con = con;
+        erro = -1;
         BotaoAnteriorBilhete.setEnabled(false);
         GerarQrCode();
         BotaoProximo.setEnabled(false);
@@ -235,6 +238,11 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         BotaoProximoBilhete.setText("Proximo");
+        BotaoProximoBilhete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BotaoProximoBilheteMouseClicked(evt);
+            }
+        });
         BotaoProximoBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoProximoBilheteActionPerformed(evt);
@@ -242,6 +250,11 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         });
 
         BotaoAnteriorBilhete.setText("Anterior");
+        BotaoAnteriorBilhete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BotaoAnteriorBilheteMouseClicked(evt);
+            }
+        });
         BotaoAnteriorBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoAnteriorBilheteActionPerformed(evt);
@@ -341,6 +354,7 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         nBilhete++;
         GerarQrCode();
         BotaoAnteriorBilhete.setEnabled(true);
+        erro = 0;
     }//GEN-LAST:event_BotaoProximoBilheteActionPerformed
 
     private void BotaoAnteriorBilheteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteActionPerformed
@@ -350,7 +364,28 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         }
         GerarQrCode();
         BotaoProximoBilhete.setEnabled(true);
+        erro = 0;
     }//GEN-LAST:event_BotaoAnteriorBilheteActionPerformed
+
+    private void BotaoProximoBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoBilheteMouseClicked
+        if(!BotaoProximoBilhete.isEnabled()){
+            if(erro != 0) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Não existe mais bilhetes");
+            panel.showNotification();
+            }
+            erro = -1;
+        }
+    }//GEN-LAST:event_BotaoProximoBilheteMouseClicked
+
+    private void BotaoAnteriorBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteMouseClicked
+        if(!BotaoAnteriorBilhete.isEnabled()){
+            if(erro != 0) {
+            Notification panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Não existe mais bilhetes");
+            panel.showNotification();
+            }
+            erro = -1;
+        }
+    }//GEN-LAST:event_BotaoAnteriorBilheteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
