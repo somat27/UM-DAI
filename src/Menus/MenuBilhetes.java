@@ -186,11 +186,6 @@ public class MenuBilhetes extends javax.swing.JFrame {
         BotaoAnterior.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         BotaoAnterior.setText("Único");
         BotaoAnterior.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        BotaoAnterior.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotaoAnteriorActionPerformed(evt);
-            }
-        });
 
         BotaoProximo.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         BotaoProximo.setText("Personalizado");
@@ -198,11 +193,6 @@ public class MenuBilhetes extends javax.swing.JFrame {
         BotaoProximo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 BotaoProximoMouseClicked(evt);
-            }
-        });
-        BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotaoProximoActionPerformed(evt);
             }
         });
 
@@ -275,14 +265,6 @@ public class MenuBilhetes extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-
-    }//GEN-LAST:event_BotaoAnteriorActionPerformed
-
-    private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        
-    }//GEN-LAST:event_BotaoProximoActionPerformed
 
     private void BotaoVoltarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoVoltarMouseClicked
         dispose();

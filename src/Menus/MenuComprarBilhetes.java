@@ -127,7 +127,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
     private void atualizarValorTotal() { 
         String corSelecionada = (String) CorLinha.getSelectedItem();
         String quantidadeSelecionadaStr = (String) Quantidade.getSelectedItem();   
-        float valor = 0;
+        float PrecoFinal = 0;
 
         if(TipoDeBilhete.getSelectedIndex() == 0){
             // Verifica se a quantidade selecionada é null
@@ -146,7 +146,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         float preco = rs.getFloat("Preco");
 
                         if(corSelecionada!=null && corSelecionada.equals(linha))
-                            valor = preco;
+                            PrecoFinal = preco;
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,9 +159,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                     }
                 }
 
-                valor = valor * quantidadeSelecionada;
+                PrecoFinal = PrecoFinal * quantidadeSelecionada;
 
-                Preco.setText(String.valueOf(valor));
+                Preco.setText(String.valueOf(PrecoFinal));
             }
         }else{
             
@@ -267,6 +267,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         TipoDeBilhete.setToolTipText("");
         TipoDeBilhete.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         TipoDeBilhete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        TipoDeBilhete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TipoDeBilheteMouseClicked(evt);
+            }
+        });
         TipoDeBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TipoDeBilheteActionPerformed(evt);
@@ -497,9 +502,9 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                 return;
             }
             a=1;
-            try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
+            try (Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens")) {
 
-                ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
+                //ResultSet rs2 = st.executeQuery("SELECT * FROM Paragens");
                 while (rs2.next()) {
                     String nodeName = rs2.getString("Nome");
                     Node<String> node = new Node<>(nodeName);
@@ -609,7 +614,7 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM Horarios")) {
 
-               Set<String> paragensAdicionadas = new HashSet<>();
+                Set<String> paragensAdicionadas = new HashSet<>();
 
                 while (rs.next()) {
                     String estacao = rs.getString("Estacao");
@@ -618,36 +623,35 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
                         Quantidade.addItem(estacao);
                         paragensAdicionadas.add(estacao);
                     }
-                    
                 }
-                CorLinha.setSelectedItem(null);
-                Quantidade.setSelectedItem(null);
-                Preco.setText("");
             } catch (SQLException ex) {
                 Logger.getLogger(MenuBilhetes.class.getName()).log(Level.SEVERE, null, ex);
             }
+            CorLinha.setSelectedIndex(-1);
+            Quantidade.setSelectedIndex(-1);
+            Preco.setText("");
         }
     }//GEN-LAST:event_TipoDeBilheteActionPerformed
 
     private void CorLinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CorLinhaActionPerformed
-        if(TipoDeBilhete.getSelectedIndex() == 0){
+        if(TipoDeBilhete.getSelectedIndex() == 0 && CorLinha.getSelectedItem() != null && Quantidade.getSelectedItem() != null){
             atualizarValorTotal();
-        } else if(TipoDeBilhete.getSelectedIndex() == 1){
+        } else if(TipoDeBilhete.getSelectedIndex() == 1 && CorLinha.getSelectedItem() != null && Quantidade.getSelectedItem() != null){
             calcularMelhorRota();
         }
     }//GEN-LAST:event_CorLinhaActionPerformed
 
     private void QuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuantidadeActionPerformed
-        if(TipoDeBilhete.getSelectedIndex() == 0){
+        if(TipoDeBilhete.getSelectedIndex() == 0 && Quantidade.getSelectedItem() != null && CorLinha.getSelectedItem() != null){
             atualizarValorTotal();
-        } else if(TipoDeBilhete.getSelectedIndex() == 1){
+        } else if(TipoDeBilhete.getSelectedIndex() == 1 && Quantidade.getSelectedItem() != null && CorLinha.getSelectedItem() != null){
             calcularMelhorRota();
         }
     }//GEN-LAST:event_QuantidadeActionPerformed
 
     private boolean SotemDigito(String numero){
-        for (char a : numero.toCharArray()) {
-            if (!(a >= '0' && a <= '9')) {
+        for (char num : numero.toCharArray()) {
+            if (!(num >= '0' && num <= '9')) {
                 return false;
             }
         }
@@ -738,8 +742,8 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
             panel.showNotification();
             
             if(!Multibanco.isSelected() && !Cartao.isSelected() && !MBWay.isSelected()) {
-            Notification panel1 = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione o método de pagamento");
-            panel1.showNotification();
+                panel = new Notification(this, Notification.Type.WARNING, Notification.Location.TOP_CENTER, "Selecione o método de pagamento");
+                panel.showNotification();
             }
         }else   if (corSelecionada != null && quantidadeSelecionadaStr != null && tipoBilhete != null){
             if (Multibanco.isSelected()) {
@@ -844,6 +848,11 @@ public class MenuComprarBilhetes extends javax.swing.JFrame {
         MenuBRT Voltar = new MenuBRT();
         Voltar.setVisible(true);
     }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void TipoDeBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TipoDeBilheteMouseClicked
+        CorLinha.removeAllItems();
+        Quantidade.removeAllItems();
+    }//GEN-LAST:event_TipoDeBilheteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

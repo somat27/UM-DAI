@@ -203,25 +203,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
                 BotaoAnteriorMouseClicked(evt);
             }
         });
-        BotaoAnterior.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotaoAnteriorActionPerformed(evt);
-            }
-        });
 
         BotaoProximo.setFont(new java.awt.Font("Arial Rounded MT Bold", 0, 12)); // NOI18N
         BotaoProximo.setText("Personalizado");
         BotaoProximo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        BotaoProximo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                BotaoProximoMouseClicked(evt);
-            }
-        });
-        BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BotaoProximoActionPerformed(evt);
-            }
-        });
 
         TextoPercurso.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 34)); // NOI18N
         TextoPercurso.setForeground(new java.awt.Color(255, 255, 255));
@@ -238,11 +223,6 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         QrCode.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         BotaoProximoBilhete.setText("Proximo");
-        BotaoProximoBilhete.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                BotaoProximoBilheteMouseClicked(evt);
-            }
-        });
         BotaoProximoBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoProximoBilheteActionPerformed(evt);
@@ -250,11 +230,6 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         });
 
         BotaoAnteriorBilhete.setText("Anterior");
-        BotaoAnteriorBilhete.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                BotaoAnteriorBilheteMouseClicked(evt);
-            }
-        });
         BotaoAnteriorBilhete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoAnteriorBilheteActionPerformed(evt);
@@ -326,23 +301,11 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-
-    }//GEN-LAST:event_BotaoAnteriorActionPerformed
-
-    private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        
-    }//GEN-LAST:event_BotaoProximoActionPerformed
-
     private void BotaoVoltarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoVoltarMouseClicked
         dispose();
         MenuBRT Voltar = new MenuBRT();
         Voltar.setVisible(true);
     }//GEN-LAST:event_BotaoVoltarMouseClicked
-
-    private void BotaoProximoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoMouseClicked
-        
-    }//GEN-LAST:event_BotaoProximoMouseClicked
 
     private void BotaoAnteriorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorMouseClicked
         dispose();
@@ -366,14 +329,6 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         BotaoProximoBilhete.setVisible(true);
         erro = 0;
     }//GEN-LAST:event_BotaoAnteriorBilheteActionPerformed
-
-    private void BotaoProximoBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoProximoBilheteMouseClicked
-        
-    }//GEN-LAST:event_BotaoProximoBilheteMouseClicked
-
-    private void BotaoAnteriorBilheteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_BotaoAnteriorBilheteMouseClicked
-        
-    }//GEN-LAST:event_BotaoAnteriorBilheteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

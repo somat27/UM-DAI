@@ -199,9 +199,6 @@
               <Color id="Hand Cursor"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoAnteriorActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="BotaoProximo">
           <Properties>
@@ -215,7 +212,6 @@
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="BotaoProximoMouseClicked"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoProximoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="TextoPercurso">

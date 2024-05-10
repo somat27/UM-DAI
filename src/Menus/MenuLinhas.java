@@ -154,16 +154,6 @@ public class MenuLinhas extends javax.swing.JFrame {
 
         TipoDia.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         TipoDia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        TipoDia.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                TipoDiaItemStateChanged(evt);
-            }
-        });
-        TipoDia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TipoDiaActionPerformed(evt);
-            }
-        });
 
         CorLinha.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         CorLinha.setToolTipText("");
@@ -177,11 +167,6 @@ public class MenuLinhas extends javax.swing.JFrame {
 
         Sentido.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 14)); // NOI18N
         Sentido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        Sentido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SentidoActionPerformed(evt);
-            }
-        });
 
         TextoSentido.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 18)); // NOI18N
         TextoSentido.setForeground(new java.awt.Color(255, 255, 255));
@@ -329,18 +314,6 @@ public class MenuLinhas extends javax.swing.JFrame {
         TipoDia.addItem("Domingos e Feriados");
         BotaoConfirmarLinhas.setEnabled(true);
     }//GEN-LAST:event_CorLinhaActionPerformed
-
-    private void SentidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SentidoActionPerformed
-        
-    }//GEN-LAST:event_SentidoActionPerformed
-
-    private void TipoDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoDiaActionPerformed
-
-    }//GEN-LAST:event_TipoDiaActionPerformed
-
-    private void TipoDiaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_TipoDiaItemStateChanged
-
-    }//GEN-LAST:event_TipoDiaItemStateChanged
 
     private void BotaoConfirmarLinhasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoConfirmarLinhasActionPerformed
         String CorLinhaString = (String)  CorLinha.getSelectedItem();
