@@ -114,7 +114,10 @@ public class MenuBilhetePersonalizado extends javax.swing.JFrame {
         BotaoAnteriorBilhete.setVisible(false);
         GerarQrCode();
         BotaoProximo.setEnabled(false);
-     }
+        if (TextoCaminho.getText().equals("Sem Bilhetes")) {
+            BotaoProximoBilhete.setVisible(false);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

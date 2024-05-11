@@ -36,35 +36,36 @@ public class MenuBilhetes extends javax.swing.JFrame {
     
     public void GerarQrCode() {
         String QrCodeData = LerBaseDados();
+        if (QrCodeData != ""){
+            try {
+                String charset = "UTF-8";
 
-        try {
-            String charset = "UTF-8";
+                Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
+                hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
+                        BarcodeFormat.QR_CODE,350,350,hintMap);
 
-            Map <EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap <EncodeHintType, ErrorCorrectionLevel> ();
-            hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-            BitMatrix matrix = new MultiFormatWriter().encode(new String (QrCodeData.getBytes(charset), charset), 
-                    BarcodeFormat.QR_CODE,350,350,hintMap);
-
-            //MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
-            // Convertendo a matriz BitMatrix em uma imagem BufferedImage
-            int width = matrix.getWidth();
-            int height = matrix.getHeight();
-            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                //MatrixToImageWriter.writeToFile(matrix,filePath.substring(filePath.lastIndexOf('.')+1), new File(filePath));
+                // Convertendo a matriz BitMatrix em uma imagem BufferedImage
+                int width = matrix.getWidth();
+                int height = matrix.getHeight();
+                BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                    }
                 }
+
+                // Convertendo a imagem BufferedImage em um ImageIcon
+                ImageIcon icon = new ImageIcon(image);
+                QrCode.setIcon(icon);
+                QrCode.revalidate();
+                QrCode.repaint();
+
+                TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
+            } catch (WriterException | UnsupportedEncodingException e) {
+                System.out.println(e);
             }
-
-            // Convertendo a imagem BufferedImage em um ImageIcon
-            ImageIcon icon = new ImageIcon(image);
-            QrCode.setIcon(icon);
-            QrCode.revalidate();
-            QrCode.repaint();
-
-            TextoCaminho.setText("<html>" + QrCodeData.replaceAll("<","&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>");
-        } catch (WriterException | UnsupportedEncodingException e) {
-            System.out.println(e);
         }
     }
     
