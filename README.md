@@ -122,4 +122,4 @@ Technical Notes
   - Credentials are currently hard‑coded in the codebase for demonstration. For production, externalize them (environment variables or an unversioned `config.properties`).
 
 License
-- Academic project — no explicit license is defined in this repository.
+Academic project for DAI — University of Minho.
